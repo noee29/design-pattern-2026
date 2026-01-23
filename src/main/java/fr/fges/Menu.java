@@ -3,43 +3,63 @@ package fr.fges;
 import java.util.Scanner;
 
 public class Menu {
-// creer un scanner general?
-    // Enlever static
+    // common scanner
+    private static final Scanner scanner = new Scanner(System.in);
+
     public static String getUserInput(String prompt) {
-        // Scanner is a class in java that helps to read input from various sources like keyboard input, files, etc.
-        Scanner scanner = new Scanner(System.in);
-        // No new line for this one
         System.out.printf("%s: ", prompt);
-        // Read input for the keyboard
         return scanner.nextLine();
     }
 
+    private static int getIntInput(String prompt) {
+        while (true) {
+            String input = getUserInput(prompt);
+            try {
+                return Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter a valid number.");
+            }
+        }
+    }
+
+    private static int getIntAtLeast(String prompt, int minValue) {
+        while (true) {
+            int value = getIntInput(prompt);
+            if (value < minValue) {
+                System.out.println("Value must be at least " + minValue + ".");
+            }
+            else{
+                System.out.println("Value must be greater than or equal to " + minValue + ".");
+            }
+
+            return value;
+        }
+    }
+
+    private static int getIntAtLeastOther(String prompt, int minAllowed) {
+        while (true) {
+            int value = getIntAtLeast(prompt, 0);
+            if (value < minAllowed) {
+                System.out.println("Value must be greater than or equal to " + minAllowed + ".");
+                continue;
+            }
+            return value;
+        }
+    }
+
     public static void displayMainMenu() {
-        String menuText = """
+        System.out.println("""
                 === Board Game Collection ===
                 1. Add Board Game
                 2. Remove Board Game
                 3. List All Board Games
                 4. Exit
                 Please select an option (1-4):
-                """;
-
-        System.out.println(menuText);
+                """);
     }
 
-    // int pour min player et max player enlever le parseint est faire des try catch sur l²input
-
-    public static void addGame() {// modification de la fonction
-        String title = getUserInput("Title");
-        String minPlayersStr = getUserInput("Minimum Players");
-        String maxPlayersStr = getUserInput("Maximum Players");
-        String category = getUserInput("Category (e.g., fantasy, cooperative, family, strategy)");
-
-        int minPlayers = Integer.parseInt(minPlayersStr);
-        int maxPlayers = Integer.parseInt(maxPlayersStr);
-
-        BoardGame game = new BoardGame(title, minPlayers, maxPlayers, category);
-
+    public static void addGame() {
+        BoardGame game = readGameFromUser();
         GameCollection.addGame(game);
         System.out.println("Board game added successfully.");
     }
@@ -47,16 +67,14 @@ public class Menu {
     public static void removeGame() {
         String title = getUserInput("Title of game to remove");
 
-        // get games from the collection, find the one that matches the title given by the user and remove
-        var games = GameCollection.getGames();
-
-        for (BoardGame game : games) {
+        for (BoardGame game : GameCollection.getGames()) {
             if (game.title().equals(title)) {
                 GameCollection.removeGame(game);
                 System.out.println("Board game removed successfully.");
                 return;
             }
         }
+
         System.out.println("No board game found with that title.");
     }
 
@@ -69,18 +87,38 @@ public class Menu {
         System.exit(0);
     }
 
+    // Keeps showing the menu until the user chooses Exit
     public static void handleMenu() {
-        displayMainMenu();
-
-        Scanner scanner = new Scanner(System.in);
-        String choice = scanner.nextLine();
-
-        switch (choice) {
-            case "1" -> addGame();
-            case "2" -> removeGame();
-            case "3" -> listAllGames();
-            case "4" -> exit();
-            default -> System.out.println("Invalid choice. Please select a valid option.");
+        while (true) {
+            displayMainMenu();
+            String choice = scanner.nextLine();
+            handleChoiceUntilValid(choice);
         }
+    }
+
+    private static void handleChoiceUntilValid(String firstChoice) {
+        String choice = firstChoice;
+
+        while (true) {
+            switch (choice) {
+                case "1" -> { addGame(); return; }
+                case "2" -> { removeGame(); return; }
+                case "3" -> { listAllGames(); return; }
+                case "4" -> exit(); // exits the app
+                default -> {
+                    System.out.println("Invalid choice. Please select a valid option (1-4):");
+                    choice = scanner.nextLine();
+                }
+            }
+        }
+    }
+
+    private static BoardGame readGameFromUser() {
+        String title = getUserInput("Title");
+        int minPlayers = getIntAtLeast("Minimum Players", 0);
+        int maxPlayers = getIntAtLeastOther("Maximum Players", minPlayers);
+        String category = getUserInput("Category (e.g., fantasy, cooperative, family, strategy)");
+
+        return new BoardGame(title, minPlayers, maxPlayers, category);
     }
 }
