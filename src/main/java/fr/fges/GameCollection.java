@@ -126,7 +126,8 @@ public class GameCollection {
         ObjectMapper mapper = new ObjectMapper();
         List<BoardGame> loadedGames = mapper.readValue(
                 new File(storageFile),
-                new TypeReference<List<BoardGame>>() {}
+                new TypeReference<>() {
+                }
         );
         replaceGames(loadedGames);
     }
