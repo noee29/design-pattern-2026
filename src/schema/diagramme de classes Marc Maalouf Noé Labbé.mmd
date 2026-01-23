@@ -1,0 +1,53 @@
+classDiagram
+    direction TB
+
+    class BoardGame {
+        <<record>>
+        - String title
+        - int minPlayers
+        - int maxPlayers
+        - String category
+    }
+
+    class GameCollection {
+        - List~BoardGame~ games
+        - String storageFile
+        + setStorageFile(String)
+        + getGames() List~BoardGame~
+        + addGame(BoardGame)
+        + removeGame(BoardGame)
+        + viewAllGames()
+        + loadFromFile()
+        - loadFromJson()
+        - loadFromCsv()
+        + saveToFile()
+        - saveToJson()
+        - saveToCsv()
+    }
+
+    class Menu {
+        - Scanner scanner
+        + getUserInput(String) String
+        - getIntInput(String) int
+        - getIntAtLeast(String, int) int
+        - getIntAtLeastOther(String, int) int
+        + displayMainMenu()
+        + addGame()
+        + removeGame()
+        + listAllGames()
+        + exit()
+        + handleMenu()
+        - handleChoiceUntilValid(String)
+        - readGameFromUser() BoardGame
+    }
+
+    class Main {
+        + main(String[])
+        - validateArguments(String[])
+    }
+
+    GameCollection "1" *-- "0..*" BoardGame : contains
+    Menu ..> GameCollection : uses
+    Menu ..> BoardGame : creates
+    Main ..> GameCollection : configures
+    Main ..> Menu : starts
