@@ -26,19 +26,16 @@ public class Menu {
         while (true) {
             int value = getIntInput(prompt);
             if (value < minValue) {
-                System.out.println("Value must be at least " + minValue + ".");
-            }
-            else{
                 System.out.println("Value must be greater than or equal to " + minValue + ".");
+            } else {
+                return value;
             }
-
-            return value;
         }
     }
 
     private static int getIntAtLeastOther(String prompt, int minAllowed) {
         while (true) {
-            int value = getIntAtLeast(prompt, 0);
+            int value = getIntAtLeast(prompt, 1);
             if (value < minAllowed) {
                 System.out.println("Value must be greater than or equal to " + minAllowed + ".");
                 continue;
@@ -115,7 +112,7 @@ public class Menu {
 
     private static BoardGame readGameFromUser() {
         String title = getUserInput("Title");
-        int minPlayers = getIntAtLeast("Minimum Players", 0);
+        int minPlayers = getIntAtLeast("Minimum Players", 1);
         int maxPlayers = getIntAtLeastOther("Maximum Players", minPlayers);
         String category = getUserInput("Category (e.g., fantasy, cooperative, family, strategy)");
 
