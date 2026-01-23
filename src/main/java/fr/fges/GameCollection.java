@@ -39,10 +39,6 @@ public class GameCollection {
         saveToFile();
     }
 
-    /* ===============================
-       VIEW / PRESENTATION
-       =============================== */
-
     public static void viewAllGames() {
         if (isEmpty()) {
             displayEmptyMessage();
