@@ -3,7 +3,8 @@ package fr.fges;
 import java.util.Scanner;
 
 public class Menu {
-
+// creer un scanner general?
+    // Enlever static
     public static String getUserInput(String prompt) {
         // Scanner is a class in java that helps to read input from various sources like keyboard input, files, etc.
         Scanner scanner = new Scanner(System.in);
@@ -26,7 +27,9 @@ public class Menu {
         System.out.println(menuText);
     }
 
-    public static void addGame() {
+    // int pour min player et max player enlever le parseint est faire des try catch sur l²input
+
+    public static void addGame() {// modification de la fonction
         String title = getUserInput("Title");
         String minPlayersStr = getUserInput("Minimum Players");
         String maxPlayersStr = getUserInput("Maximum Players");
