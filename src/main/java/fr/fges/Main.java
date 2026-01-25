@@ -1,7 +1,7 @@
 package fr.fges;
 
 public class Main {
-
+    // the main functionality is to run the code and store the data in a file
     public static void main(String[] args) {
 
         validateArguments(args);
@@ -16,7 +16,7 @@ public class Main {
         // Application flow starts here
         Menu.handleMenu();
     }
-
+    // a function that handles the arguments
     private static void validateArguments(String[] args) {
         if (args.length < 1) {
             System.out.println("Usage: java -jar boardgamecollection.jar <storage-file>");

@@ -21,7 +21,7 @@ public class Menu {
             }
         }
     }
-
+    // condition for th minimum value so it won't be less than zero
     private static int getIntAtLeast(String prompt, int minValue) {
         while (true) {
             int value = getIntInput(prompt);
@@ -32,7 +32,7 @@ public class Menu {
             }
         }
     }
-
+    // condition for the maximum value so that it won't be less than the minimum
     private static int getIntAtLeastOther(String prompt, int minAllowed) {
         while (true) {
             int value = getIntAtLeast(prompt, 1);
@@ -43,7 +43,7 @@ public class Menu {
             return value;
         }
     }
-
+    // instead of giving a variable and allocated space we opted to give it a function that print it
     public static void displayMainMenu() {
         System.out.println("""
                 === Board Game Collection ===
@@ -54,7 +54,7 @@ public class Menu {
                 Please select an option (1-4):
                 """);
     }
-
+    // here we just pput the part of add so it has one functionality
     public static void addGame() {
         BoardGame game = readGameFromUser();
         GameCollection.addGame(game);
@@ -92,7 +92,7 @@ public class Menu {
             handleChoiceUntilValid(choice);
         }
     }
-
+    // this function let our system work even if there is error in the input until the user enters a valid input
     private static void handleChoiceUntilValid(String firstChoice) {
         String choice = firstChoice;
 
@@ -109,7 +109,7 @@ public class Menu {
             }
         }
     }
-
+    // here we did a function for the  inputs needed to add a game we remove the parseInt and put the variable directly as integer
     private static BoardGame readGameFromUser() {
         String title = getUserInput("Title");
         int minPlayers = getIntAtLeast("Minimum Players", 1);

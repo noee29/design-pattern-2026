@@ -18,8 +18,6 @@ public class GameCollection {
     private static final List<BoardGame> games = new ArrayList<>();
     private static String storageFile = "";
 
-
-
     public static void setStorageFile(String file) {
         storageFile = file;
     }
@@ -38,7 +36,7 @@ public class GameCollection {
         games.remove(game);
         saveToFile();
     }
-
+    // kept one functionality related to view games
     public static void viewAllGames() {
         if (isEmpty()) {
             displayEmptyMessage();
@@ -52,17 +50,17 @@ public class GameCollection {
     private static boolean isEmpty() {
         return games.isEmpty();
     }
-
+    // add it for future needs if we wont to
     private static void displayEmptyMessage() {
         System.out.println("No board games in collection.");
-    }
-
+     }
+     // here we put the 2nd functionality of the old view all games
     private static void displayGames(List<BoardGame> games) {
         for (BoardGame game : games) {
             System.out.println(formatGame(game));
         }
     }
-
+    // did the format alone in case we might use or need to change it that way it's easier and clearer
     private static String formatGame(BoardGame game) {
         return "Game: " + game.title() +
                 " (" + game.minPlayers() + "-" +
@@ -76,7 +74,7 @@ public class GameCollection {
                 .toList();
     }
 
-
+    // Loads board games from the storage file if it exists, automatically detecting JSON or CSV format
     public static void loadFromFile() {
         if (!storageFileExists()) {
             return;
@@ -92,7 +90,7 @@ public class GameCollection {
             System.out.println("Error loading file: " + e.getMessage());
         }
     }
-
+    // Saves the current list of board games to the storage file using the appropriate format (JSON or CSV)
     private static void saveToFile() {
         try {
             if (isJsonFile()) {
@@ -117,8 +115,8 @@ public class GameCollection {
         return storageFile.endsWith(".csv");
     }
 
-
-    private static void loadFromJson() throws IOException {
+    // Saves the current list of board games to a JSON file using a formatted output
+     private static void loadFromJson() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         List<BoardGame> loadedGames = mapper.readValue(
                 new File(storageFile),
@@ -133,7 +131,7 @@ public class GameCollection {
         mapper.writerWithDefaultPrettyPrinter()
                 .writeValue(new File(storageFile), games);
     }
-
+    // Loads board games from a CSV file while skipping the header and validating each line
     private static void loadFromCsv() throws IOException {
         List<BoardGame> loadedGames = new ArrayList<>();
 
@@ -151,18 +149,18 @@ public class GameCollection {
 
         replaceGames(loadedGames);
     }
-
+    // Saves the current list of board games to a CSV file including a header row
     private static void saveToCsv() throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(storageFile))) {
             writeCsvHeader(writer);
             writeCsvGames(writer);
         }
     }
-
+    // Skips the header line of a CSV file before reading data rows
     private static void skipHeader(BufferedReader reader) throws IOException {
         reader.readLine();
     }
-
+    // Parses a single CSV line into a BoardGame object, returning null if the data is invalid
     private static BoardGame parseCsvLine(String line) {
         String[] parts = line.split(",");
         if (parts.length < 4) return null;
@@ -178,12 +176,12 @@ public class GameCollection {
             return null;
         }
     }
-
+    // Writes the header row for the CSV file
     private static void writeCsvHeader(BufferedWriter writer) throws IOException {
         writer.write("title,minPlayers,maxPlayers,category");
         writer.newLine();
     }
-
+    // Writes all board games to the CSV file in comma-separated format
     private static void writeCsvGames(BufferedWriter writer) throws IOException {
         for (BoardGame game : games) {
             writer.write(game.title() + "," +
@@ -194,7 +192,7 @@ public class GameCollection {
         }
     }
 
-
+    // Replaces the current board game list with a new list of loaded games
     private static void replaceGames(List<BoardGame> newGames) {
         games.clear();
         games.addAll(newGames);
