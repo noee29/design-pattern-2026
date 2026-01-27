@@ -1,5 +1,8 @@
-package fr.fges;
+package fr.fges.samplecode;
 
+import fr.fges.BoardGame;
+import fr.fges.GameCollection;
+import fr.fges.Menu;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
