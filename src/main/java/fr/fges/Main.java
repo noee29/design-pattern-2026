@@ -14,7 +14,8 @@ public class Main {
         System.out.println("Using storage file: " + storageFile);
 
         // Application flow starts here
-        Menu.handleMenu();
+        Menu menu = new Menu();
+        menu.handleMenu();
     }
     // a function that handles the arguments
     private static void validateArguments(String[] args) {
