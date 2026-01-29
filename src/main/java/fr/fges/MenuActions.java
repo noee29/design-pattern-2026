@@ -1,15 +1,20 @@
 package fr.fges;
 
+import java.util.Random;
+
 public class MenuActions {
 
     private final UserInput input;
     private final GameRepository repository;
     private final GamePrinter printer;
+    private final Random random;
 
-    public MenuActions(UserInput input, GameRepository repository, GamePrinter printer) {
+
+    public MenuActions(UserInput input, GameRepository repository, GamePrinter printer, Random random) {
         this.input = input;
         this.repository = repository;
         this.printer = printer;
+        this.random = new Random();
     }
 
     public void addGame() {
@@ -61,4 +66,28 @@ public class MenuActions {
 
         return new BoardGame(title, minPlayers, maxPlayers, category);
     }
+
+    public void recommendGame() {
+
+        int players = input.getIntAtLeast("How many players?", 1);
+
+        var compatibleGames = repository.findCompatibleGames(players);
+
+        if (compatibleGames.isEmpty()) {
+            System.out.println("No compatible games found.");
+            return;
+        }
+
+        int index = random.nextInt(compatibleGames.size());
+        BoardGame game = compatibleGames.get(index);
+
+        System.out.println(
+                "Recommended game: \"" +
+                        game.title() + "\" (" +
+                        game.minPlayers() + "-" +
+                        game.maxPlayers() + " players, " +
+                        game.category() + ")"
+        );
+    }
+
 }

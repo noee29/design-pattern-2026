@@ -62,4 +62,13 @@ public class GameRepository {
             System.out.println("Error saving file: " + e.getMessage());
         }
     }
+
+    public List<BoardGame> findCompatibleGames(int players) {
+        return games.stream()
+                .filter(g -> players >= g.minPlayers()
+                        && players <= g.maxPlayers())
+                .toList();
+    }
+
+
 }

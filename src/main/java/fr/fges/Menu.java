@@ -1,16 +1,25 @@
 package fr.fges;
 
+import java.util.Random;
+
 public class Menu {
 
     private final UserInput input;
     private final MenuActions actions;
 
     public Menu(GameRepository repository) {
+
         this.input = new UserInput();
+        GamePrinter printer = new GamePrinter();
 
-        GamePrinter printer = new GamePrinter(); // ✅ NOUVELLE DÉPENDANCE
+        Random random = new Random(); // injected ONCE
 
-        this.actions = new MenuActions(input, repository, printer);
+        this.actions = new MenuActions(
+                input,
+                repository,
+                printer,
+                random
+        );
     }
 
     public void handleMenu() {
@@ -23,14 +32,16 @@ public class Menu {
 
     private void displayMainMenu() {
         System.out.println("""
-                === Board Game Collection ===
-                1. Add Board Game
-                2. Remove Board Game
-                3. List All Board Games
-                4. Exit
-                Please select an option (1-4):
-                """);
+            === Board Game Collection ===
+            1. Add Board Game
+            2. Remove Board Game
+            3. List All Board Games
+            4. Recommend Game
+            5. Exit
+            Please select an option (1-5):
+            """);
     }
+
 
     private void handleChoice(String choice) {
         while (true) {
@@ -47,9 +58,13 @@ public class Menu {
                     actions.listAllGames();
                     return;
                 }
-                case "4" -> actions.exit();
+                case "4" -> {
+                    actions.recommendGame();
+                    return;
+                }
+                case "5" -> actions.exit();
                 default -> {
-                    System.out.println("Invalid choice. Please select a valid option (1-4):");
+                    System.out.println("Invalid choice. Please select a valid option (1-5):");
                     choice = input.readChoice();
                 }
             }
