@@ -1,5 +1,6 @@
 package fr.fges;
 
+import java.util.List;
 import java.util.Random;
 
 public class MenuActions {
@@ -8,13 +9,64 @@ public class MenuActions {
     private final GameRepository repository;
     private final GamePrinter printer;
     private final Random random;
+    private final DayPolicy dayPolicy;
 
 
-    public MenuActions(UserInput input, GameRepository repository, GamePrinter printer, Random random) {
+    public MenuActions(UserInput input, GameRepository repository, GamePrinter printer, Random random, DayPolicy dayPolicy) {
         this.input = input;
         this.repository = repository;
         this.printer = printer;
-        this.random = new Random();
+        this.random = random;
+        this.dayPolicy = dayPolicy;
+    }
+    public void weekendSummary() {
+
+        if (!isSummaryAllowed()) {
+            displaySummaryNotAllowed();
+            return;
+        }
+
+        if (repository.isEmpty()) {
+            displayEmptyCollection();
+            return;
+        }
+
+        displaySummaryHeader();
+        displayRandomGamesSummary();
+    }
+
+    private boolean isSummaryAllowed() {
+        return dayPolicy.isWeekend();
+    }
+
+    private void displaySummaryNotAllowed() {
+        System.out.println("Summary is only available on weekends.");
+    }
+
+    private void displayEmptyCollection() {
+        System.out.println("No board games in collection.");
+    }
+    private void displaySummaryHeader() {
+        System.out.println("=== Summary (3 random games) ===");
+    }
+    private void displayRandomGamesSummary() {
+
+        var games = repository.getGames();
+        int count = getSummaryCount(games.size());
+
+        for (int i = 0; i < count; i++) {
+            BoardGame game = pickRandomGame(games);
+            displayGame(game);
+        }
+    }
+    private int getSummaryCount(int totalGames) {
+        return Math.min(3, totalGames);
+    }
+    private BoardGame pickRandomGame(List<BoardGame> games) {
+        return games.get(random.nextInt(games.size()));
+    }
+    private void displayGame(BoardGame game) {
+        System.out.println("- " + game);
     }
 
     public void addGame() {

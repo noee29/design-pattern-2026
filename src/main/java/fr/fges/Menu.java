@@ -12,13 +12,15 @@ public class Menu {
         this.input = new UserInput();
         GamePrinter printer = new GamePrinter();
 
-        Random random = new Random(); // injected ONCE
+        Random random = new Random();              // injected ONCE
+        DayPolicy dayPolicy = new SystemDayPolicy(); // injected ONCE
 
         this.actions = new MenuActions(
                 input,
                 repository,
                 printer,
-                random
+                random,
+                dayPolicy
         );
     }
 
@@ -41,7 +43,6 @@ public class Menu {
             Please select an option (1-5):
             """);
     }
-
 
     private void handleChoice(String choice) {
         while (true) {
