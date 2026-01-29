@@ -3,4 +3,19 @@
   "minPlayers" : 1,
   "maxPlayers" : 37,
   "category" : "action"
+}, {
+  "title" : "Monopoly",
+  "minPlayers" : 2,
+  "maxPlayers" : 10,
+  "category" : "strategy"
+}, {
+  "title" : "Catan",
+  "minPlayers" : 2,
+  "maxPlayers" : 6,
+  "category" : "family"
+}, {
+  "title" : "Bingo",
+  "minPlayers" : 2,
+  "maxPlayers" : 10,
+  "category" : "family"
 } ]

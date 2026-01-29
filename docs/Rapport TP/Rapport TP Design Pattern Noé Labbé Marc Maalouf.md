@@ -19,3 +19,26 @@ Enfin, la logique de recherche a été testée de manière isolée grâce à la 
 **Lien du projet Git :**
 
 <https://github.com/noee29/design-pattern-2026.git>
+
+------------------------------------------------------------------------------
+**Rapport TP 2 Marc Maalouf Noé Labbé 02/02/26**
+
+**Refactored CodeBase :**
+
+**Dans un premier temps, nous avons refactorisé la base de code en supprimant l’utilisation excessive des éléments statiques et en réorganisant l’application afin de mieux séparer les différentes responsabilités.**
+
+**Les fonctionnalités ont été réparties dans plusieurs classes cohérentes, chacune ayant un rôle bien défini. Cette organisation permet d’améliorer la lisibilité du code et respecte le principe de responsabilité unique (SRP).**
+
+**Elle rend également l’application plus simple à maintenir et plus facile à faire évoluer par la suite.**
+
+**Test Unitaire :**
+
+**Nous avons mis en place des tests unitaires en utilisant le pattern AAA.**
+
+
+
+**Les dépendances externes ont été simulées avec Mockito afin d’isoler les tests.**
+
+
+
+**Les classes d’entrée/sortie (UserInput et GamePrinter) ont été exclues ou testées minimalement, car elles ne contiennent pas de logique métier.**

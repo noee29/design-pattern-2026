@@ -1,0 +1,112 @@
+classDiagram
+
+%% ====== DOMAIN ======
+    class BoardGame {
+        +String title
+        +int minPlayers
+        +int maxPlayers
+        +String category
+    }
+
+%% ====== STORAGE STRATEGY ======
+    class StorageStrategy {
+        <<interface>>
+        +load() List~BoardGame~
+        +save(games List~BoardGame~)
+    }
+
+    class CsvStorage {
+        -String file
+        +load() List~BoardGame~
+        +save(games List~BoardGame~)
+    }
+
+    class JsonStorage {
+        -String file
+        +load() List~BoardGame~
+        +save(games List~BoardGame~)
+    }
+
+    StorageStrategy <|.. CsvStorage : implements
+    StorageStrategy <|.. JsonStorage : implements
+
+%% ====== REPOSITORY ======
+    class GameRepository {
+        -List~BoardGame~ games
+        -StorageStrategy storage
+        +addGame(game BoardGame)
+        +removeGame(game BoardGame)
+        +getGames() List~BoardGame~
+        +getGamesSortedByTitle() List~BoardGame~
+        +findCompatibleGames(players int) List~BoardGame~
+        +isEmpty() boolean
+    }
+
+    GameRepository --> StorageStrategy : uses
+    GameRepository --> BoardGame : manages
+
+%% ====== VIEW ======
+    class GamePrinter {
+        +viewAllGames(repository GameRepository)
+    }
+
+    GamePrinter --> GameRepository : reads from
+    GamePrinter --> BoardGame : displays
+
+%% ====== DAY POLICY ======
+    class DayPolicy {
+        <<interface>>
+        +isWeekend() boolean
+    }
+
+    class SystemDayPolicy {
+        +isWeekend() boolean
+    }
+
+    DayPolicy <|.. SystemDayPolicy : implements
+
+%% ====== INPUT ======
+    class UserInput {
+        +getString(prompt String) String
+        +getIntAtLeast(prompt String, min int) int
+        +getIntAtLeastOther(prompt String, min int) int
+        +readChoice() String
+    }
+
+%% ====== MENU ======
+    class Menu {
+        -UserInput input
+        -MenuActions actions
+        +handleMenu()
+    }
+
+    Menu --> UserInput : reads input
+    Menu --> MenuActions : delegates to
+
+    class MenuActions {
+        -UserInput input
+        -GameRepository repository
+        -GamePrinter printer
+        -Random random
+        -DayPolicy dayPolicy
+        +addGame()
+        +removeGame()
+        +listAllGames()
+        +recommendGame()
+        +exit()
+    }
+
+    MenuActions --> UserInput : queries
+    MenuActions --> GameRepository : modifies
+    MenuActions --> GamePrinter : displays via
+    MenuActions --> DayPolicy : checks
+    MenuActions --> BoardGame : creates / uses
+
+%% ====== MAIN ======
+    class Main {
+        +main(args String[])
+    }
+
+    Main --> Menu : creates
+    Main --> GameRepository : initializes
+    Main --> StorageStrategy : selects
