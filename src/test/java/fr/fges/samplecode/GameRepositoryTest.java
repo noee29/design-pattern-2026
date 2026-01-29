@@ -26,13 +26,10 @@ class GameRepositoryTest {
 
     @Test
     void addGame_shouldAddGame_whenTitleIsUnique() throws IOException {
-        // Arrange
         BoardGame game = new BoardGame("Catan", 3, 4, "Strategy");
 
-        // Act
         repository.addGame(game);
 
-        // Assert
         assertEquals(1, repository.getGames().size());
         verify(storage).save(any());
     }
