@@ -19,10 +19,19 @@ public class GameRepository {
     }
 
     public void addGame(BoardGame game) {
+
+        boolean exists = games.stream()
+                .anyMatch(g -> g.title().equalsIgnoreCase(game.title()));
+
+        if (exists) {
+            throw new IllegalArgumentException(
+                    "Error: A game with title \"" + game.title() + "\" already exists in the collection."
+            );
+        }
+
         games.add(game);
         saveToStorage();
     }
-
     public void removeGame(BoardGame game) {
         games.remove(game);
         saveToStorage();

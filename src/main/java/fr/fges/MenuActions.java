@@ -13,10 +13,15 @@ public class MenuActions {
     }
 
     public void addGame() {
-        BoardGame game = readGameFromUser();
-        repository.addGame(game);
-        System.out.println("Board game added successfully.");
+        try {
+            BoardGame game = readGameFromUser();
+            repository.addGame(game);
+            System.out.println("Board game added successfully.");
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
     }
+
 
     public void removeGame() {
         String title = input.getString("Title of game to remove");
