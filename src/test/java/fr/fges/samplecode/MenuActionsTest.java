@@ -1,102 +1,113 @@
 package fr.fges.samplecode;
 
 import fr.fges.BoardGame;
-import fr.fges.GameCollection;
+import fr.fges.GameRepository;
 import fr.fges.MenuActions;
+import fr.fges.StorageStrategy;
 import fr.fges.UserInput;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 /**
- * Unit tests for MenuActions class.
+ * Unit tests for MenuActions class
+ * using Arrange–Act–Assert pattern and Mockito mocks.
  */
 class MenuActionsTest {
 
     @Test
-    void listAllGames_shouldNotCrashWithEmptyCollection() {
+    void listAllGames_shouldNotCrashWithEmptyCollection() throws Exception {
         // Arrange
-        GameCollection.getGames().clear();
-        MenuActions actions = new MenuActions(new UserInput());
+        StorageStrategy storage = mock(StorageStrategy.class);
+        when(storage.load()).thenReturn(List.of());
+
+        GameRepository repository = new GameRepository(storage);
+        UserInput input = mock(UserInput.class);
+        MenuActions actions = new MenuActions(input, repository);
 
         // Act & Assert
-        assertDoesNotThrow(() -> actions.listAllGames());
+        assertDoesNotThrow(actions::listAllGames);
     }
 
     @Test
-    void listAllGames_shouldNotCrashWithGames() {
+    void listAllGames_shouldNotCrashWithGames() throws Exception {
         // Arrange
-        GameCollection.getGames().clear();
-        BoardGame game = new BoardGame("Catan", 3, 4, "strategy");
-        GameCollection.addGame(game);
-        MenuActions actions = new MenuActions(new UserInput());
+        StorageStrategy storage = mock(StorageStrategy.class);
+        when(storage.load()).thenReturn(List.of(
+                new BoardGame("Catan", 3, 4, "strategy")
+        ));
+
+        GameRepository repository = new GameRepository(storage);
+        UserInput input = mock(UserInput.class);
+        MenuActions actions = new MenuActions(input, repository);
 
         // Act & Assert
-        assertDoesNotThrow(() -> actions.listAllGames());
+        assertDoesNotThrow(actions::listAllGames);
     }
 
     @Test
-    void addAndRemoveGame_shouldModifyCollection() {
+    void addGame_shouldAddOneGame() throws Exception {
         // Arrange
-        GameCollection.getGames().clear();
+        StorageStrategy storage = mock(StorageStrategy.class);
+        when(storage.load()).thenReturn(List.of());
+
+        UserInput input = mock(UserInput.class);
+        when(input.getString("Title")).thenReturn("Catan");
+        when(input.getIntAtLeast("Minimum Players", 1)).thenReturn(3);
+        when(input.getIntAtLeastOther("Maximum Players", 3)).thenReturn(4);
+        when(input.getString("Category (e.g., fantasy, cooperative, family, strategy)"))
+                .thenReturn("strategy");
+
+        GameRepository repository = new GameRepository(storage);
+        MenuActions actions = new MenuActions(input, repository);
+
+        // Act
+        actions.addGame();
+
+        // Assert
+        verify(storage, times(1)).save(repository.getGames());
+        assertEquals(1, repository.getGames().size());
+        assertEquals("Catan", repository.getGames().get(0).title());
+    }
+
+    @Test
+    void removeGame_shouldRemoveExistingGame() throws Exception {
+        // Arrange
         BoardGame game = new BoardGame("Catan", 3, 4, "strategy");
 
+        StorageStrategy storage = mock(StorageStrategy.class);
+        when(storage.load()).thenReturn(List.of(game));
+
+        UserInput input = mock(UserInput.class);
+        when(input.getString("Title of game to remove")).thenReturn("Catan");
+
+        GameRepository repository = new GameRepository(storage);
+        MenuActions actions = new MenuActions(input, repository);
+
         // Act
-        GameCollection.addGame(game);
+        actions.removeGame();
 
         // Assert
-        assertEquals(1, GameCollection.getGames().size());
-
-        // Act
-        GameCollection.removeGame(game);
-
-        // Assert
-        assertEquals(0, GameCollection.getGames().size());
+        assertTrue(repository.getGames().isEmpty());
+        verify(storage, times(1)).save(repository.getGames());
     }
 
     @Test
-    void multipleOperations_shouldHandleAddAndRemove() {
+    void removeGame_shouldNotCrashWhenGameDoesNotExist() throws Exception {
         // Arrange
-        GameCollection.getGames().clear();
-        BoardGame game1 = new BoardGame("Catan", 3, 4, "strategy");
-        BoardGame game2 = new BoardGame("Carcassonne", 2, 5, "family");
-        BoardGame game3 = new BoardGame("Azul", 2, 4, "abstract");
+        StorageStrategy storage = mock(StorageStrategy.class);
+        when(storage.load()).thenReturn(List.of());
 
-        // Act
-        GameCollection.addGame(game1);
-        GameCollection.addGame(game2);
-        GameCollection.addGame(game3);
+        UserInput input = mock(UserInput.class);
+        when(input.getString("Title of game to remove")).thenReturn("Unknown");
 
-        // Assert
-        assertEquals(3, GameCollection.getGames().size());
+        GameRepository repository = new GameRepository(storage);
+        MenuActions actions = new MenuActions(input, repository);
 
-        // Act
-        GameCollection.removeGame(game2);
-
-        // Assert
-        assertEquals(2, GameCollection.getGames().size());
-        assertTrue(GameCollection.getGames().contains(game1));
-        assertFalse(GameCollection.getGames().contains(game2));
-        assertTrue(GameCollection.getGames().contains(game3));
-    }
-
-    @Test
-    void findGameByTitle_shouldWorkCorrectly() {
-        // Arrange
-        GameCollection.getGames().clear();
-        BoardGame game = new BoardGame("Catan", 3, 4, "strategy");
-        GameCollection.addGame(game);
-
-        // Act
-        boolean found = false;
-        for (BoardGame g : GameCollection.getGames()) {
-            if (g.title().equals("Catan")) {
-                found = true;
-                break;
-            }
-        }
-
-        // Assert
-        assertTrue(found);
+        // Act & Assert
+        assertDoesNotThrow(actions::removeGame);
     }
 }

@@ -5,9 +5,12 @@ public class Menu {
     private final UserInput input;
     private final MenuActions actions;
 
-    public Menu() {
+    public Menu(GameRepository repository) {
         this.input = new UserInput();
-        this.actions = new MenuActions(input);
+
+        GamePrinter printer = new GamePrinter(); // ✅ NOUVELLE DÉPENDANCE
+
+        this.actions = new MenuActions(input, repository, printer);
     }
 
     public void handleMenu() {
@@ -18,7 +21,7 @@ public class Menu {
         }
     }
 
-    public void displayMainMenu() {
+    private void displayMainMenu() {
         System.out.println("""
                 === Board Game Collection ===
                 1. Add Board Game
@@ -32,9 +35,18 @@ public class Menu {
     private void handleChoice(String choice) {
         while (true) {
             switch (choice) {
-                case "1" -> { actions.addGame(); return; }
-                case "2" -> { actions.removeGame(); return; }
-                case "3" -> { actions.listAllGames(); return; }
+                case "1" -> {
+                    actions.addGame();
+                    return;
+                }
+                case "2" -> {
+                    actions.removeGame();
+                    return;
+                }
+                case "3" -> {
+                    actions.listAllGames();
+                    return;
+                }
                 case "4" -> actions.exit();
                 default -> {
                     System.out.println("Invalid choice. Please select a valid option (1-4):");

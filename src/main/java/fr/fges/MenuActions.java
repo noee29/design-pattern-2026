@@ -3,23 +3,27 @@ package fr.fges;
 public class MenuActions {
 
     private final UserInput input;
+    private final GameRepository repository;
+    private final GamePrinter printer;
 
-    public MenuActions(UserInput input) {
+    public MenuActions(UserInput input, GameRepository repository, GamePrinter printer) {
         this.input = input;
+        this.repository = repository;
+        this.printer = printer;
     }
 
     public void addGame() {
         BoardGame game = readGameFromUser();
-        GameCollection.addGame(game);
+        repository.addGame(game);
         System.out.println("Board game added successfully.");
     }
 
     public void removeGame() {
         String title = input.getString("Title of game to remove");
 
-        for (BoardGame game : GameCollection.getGames()) {
-            if (game.title().equals(title)) {
-                GameCollection.removeGame(game);
+        for (BoardGame game : repository.getGames()) {
+            if (game.title().equalsIgnoreCase(title)) {
+                repository.removeGame(game);
                 System.out.println("Board game removed successfully.");
                 return;
             }
@@ -29,12 +33,19 @@ public class MenuActions {
     }
 
     public void listAllGames() {
-        GameCollection.viewAllGames();
+        printer.viewAllGames(repository);
+    }
+
+    /**
+     * Separated for testability
+     */
+    protected void exitApplication() {
+        System.exit(0);
     }
 
     public void exit() {
         System.out.println("Exiting the application. Goodbye!");
-        System.exit(0);
+        exitApplication();
     }
 
     private BoardGame readGameFromUser() {
