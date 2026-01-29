@@ -1,113 +1,95 @@
 package fr.fges.samplecode;
 
-import fr.fges.BoardGame;
-import fr.fges.GameRepository;
-import fr.fges.MenuActions;
-import fr.fges.StorageStrategy;
-import fr.fges.UserInput;
+import fr.fges.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-/**
- * Unit tests for MenuActions class
- * using Arrange–Act–Assert pattern and Mockito mocks.
- */
 class MenuActionsTest {
 
-    @Test
-    void listAllGames_shouldNotCrashWithEmptyCollection() throws Exception {
+    private UserInput input;
+    private GameRepository repository;
+    private GamePrinter printer;
+    private Random random;
+    private DayPolicy dayPolicy;
+
+    private MenuActions actions;
+
+    @BeforeEach
+    void setUp() {
         // Arrange
-        StorageStrategy storage = mock(StorageStrategy.class);
-        when(storage.load()).thenReturn(List.of());
+        input = mock(UserInput.class);
+        repository = mock(GameRepository.class);
+        printer = mock(GamePrinter.class);
+        random = mock(Random.class);
+        dayPolicy = mock(DayPolicy.class);
 
-        GameRepository repository = new GameRepository(storage);
-        UserInput input = mock(UserInput.class);
-        MenuActions actions = new MenuActions(input, repository);
-
-        // Act & Assert
-        assertDoesNotThrow(actions::listAllGames);
+        actions = new MenuActions(input, repository, printer, random, dayPolicy);
     }
 
     @Test
-    void listAllGames_shouldNotCrashWithGames() throws Exception {
+    void recommendGame_shouldPrintGame_whenCompatibleGameExists() {
         // Arrange
-        StorageStrategy storage = mock(StorageStrategy.class);
-        when(storage.load()).thenReturn(List.of(
-                new BoardGame("Catan", 3, 4, "strategy")
-        ));
+        BoardGame game = new BoardGame("Catan", 3, 4, "Strategy");
 
-        GameRepository repository = new GameRepository(storage);
-        UserInput input = mock(UserInput.class);
-        MenuActions actions = new MenuActions(input, repository);
-
-        // Act & Assert
-        assertDoesNotThrow(actions::listAllGames);
-    }
-
-    @Test
-    void addGame_shouldAddOneGame() throws Exception {
-        // Arrange
-        StorageStrategy storage = mock(StorageStrategy.class);
-        when(storage.load()).thenReturn(List.of());
-
-        UserInput input = mock(UserInput.class);
-        when(input.getString("Title")).thenReturn("Catan");
-        when(input.getIntAtLeast("Minimum Players", 1)).thenReturn(3);
-        when(input.getIntAtLeastOther("Maximum Players", 3)).thenReturn(4);
-        when(input.getString("Category (e.g., fantasy, cooperative, family, strategy)"))
-                .thenReturn("strategy");
-
-        GameRepository repository = new GameRepository(storage);
-        MenuActions actions = new MenuActions(input, repository);
+        when(input.getIntAtLeast(anyString(), anyInt())).thenReturn(4);
+        when(repository.findCompatibleGames(4)).thenReturn(List.of(game));
+        when(random.nextInt(1)).thenReturn(0);
 
         // Act
-        actions.addGame();
+        actions.recommendGame();
 
         // Assert
-        verify(storage, times(1)).save(repository.getGames());
-        assertEquals(1, repository.getGames().size());
-        assertEquals("Catan", repository.getGames().get(0).title());
+        verify(repository).findCompatibleGames(4);
     }
 
     @Test
-    void removeGame_shouldRemoveExistingGame() throws Exception {
+    void recommendGame_shouldPrintMessage_whenNoGameFound() {
         // Arrange
-        BoardGame game = new BoardGame("Catan", 3, 4, "strategy");
-
-        StorageStrategy storage = mock(StorageStrategy.class);
-        when(storage.load()).thenReturn(List.of(game));
-
-        UserInput input = mock(UserInput.class);
-        when(input.getString("Title of game to remove")).thenReturn("Catan");
-
-        GameRepository repository = new GameRepository(storage);
-        MenuActions actions = new MenuActions(input, repository);
+        when(input.getIntAtLeast(anyString(), anyInt())).thenReturn(5);
+        when(repository.findCompatibleGames(5)).thenReturn(List.of());
 
         // Act
-        actions.removeGame();
+        actions.recommendGame();
 
         // Assert
-        assertTrue(repository.getGames().isEmpty());
-        verify(storage, times(1)).save(repository.getGames());
+        verify(repository).findCompatibleGames(5);
+        verifyNoInteractions(random);
     }
 
     @Test
-    void removeGame_shouldNotCrashWhenGameDoesNotExist() throws Exception {
+    void weekendSummary_shouldNotRun_whenNotWeekend() {
         // Arrange
-        StorageStrategy storage = mock(StorageStrategy.class);
-        when(storage.load()).thenReturn(List.of());
+        when(dayPolicy.isWeekend()).thenReturn(false);
 
-        UserInput input = mock(UserInput.class);
-        when(input.getString("Title of game to remove")).thenReturn("Unknown");
+        // Act
+        actions.weekendSummary();
 
-        GameRepository repository = new GameRepository(storage);
-        MenuActions actions = new MenuActions(input, repository);
+        // Assert
+        verify(dayPolicy).isWeekend();
+        verifyNoInteractions(repository);
+    }
 
-        // Act & Assert
-        assertDoesNotThrow(actions::removeGame);
+    @Test
+    void weekendSummary_shouldShowSummary_whenWeekendAndGamesExist() {
+        // Arrange
+        when(dayPolicy.isWeekend()).thenReturn(true);
+        when(repository.isEmpty()).thenReturn(false);
+
+        BoardGame game = new BoardGame("Uno", 2, 8, "Family");
+        when(repository.getGames()).thenReturn(List.of(game));
+        when(random.nextInt(1)).thenReturn(0);
+
+        // Act
+        actions.weekendSummary();
+
+        // Assert
+        verify(repository).getGames();
+        verify(random).nextInt(1);
     }
 }

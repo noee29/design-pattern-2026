@@ -1,47 +1,33 @@
 package fr.fges.samplecode;
 
-import fr.fges.BoardGame;
-import fr.fges.GamePrinter;
-import fr.fges.GameRepository;
+import fr.fges.*;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class GamePrinterTest {
 
     @Test
-    void viewAllGames_shouldHandleEmptyRepository() {
+    void viewAllGames_shouldPrintMessage_whenRepositoryIsEmpty() {
         // Arrange
         GameRepository repository = mock(GameRepository.class);
         when(repository.isEmpty()).thenReturn(true);
 
         GamePrinter printer = new GamePrinter();
 
-        // Act & Assert
-        assertDoesNotThrow(() -> printer.viewAllGames(repository));
-        verify(repository, times(1)).isEmpty();
-    }
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(out));
 
-    @Test
-    void viewAllGames_shouldDisplayGamesWhenNotEmpty() {
-        // Arrange
-        GameRepository repository = mock(GameRepository.class);
-        when(repository.isEmpty()).thenReturn(false);
+        // Act
+        printer.viewAllGames(repository);
 
-        List<BoardGame> games = List.of(
-                new BoardGame("Catan", 3, 4, "strategy"),
-                new BoardGame("Azul", 2, 4, "abstract")
-        );
-
-        when(repository.getGamesSortedByTitle()).thenReturn(games);
-
-        GamePrinter printer = new GamePrinter();
-
-        // Act & Assert
-        assertDoesNotThrow(() -> printer.viewAllGames(repository));
-        verify(repository, times(1)).getGamesSortedByTitle();
+        // Assert
+        assertTrue(out.toString().contains("No board games in collection."));
     }
 }

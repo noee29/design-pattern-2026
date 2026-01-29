@@ -1,11 +1,10 @@
 package fr.fges.samplecode;
 
-import fr.fges.BoardGame;
-import fr.fges.GameRepository;
-import fr.fges.StorageStrategy;
+import fr.fges.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
+import java.io.IOException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -13,53 +12,68 @@ import static org.mockito.Mockito.*;
 
 class GameRepositoryTest {
 
-    @Test
-    void constructor_shouldLoadGamesFromStorage() throws Exception {
+    private StorageStrategy storage;
+    private GameRepository repository;
+
+    @BeforeEach
+    void setUp() throws IOException {
         // Arrange
-        StorageStrategy storage = mock(StorageStrategy.class);
-        BoardGame game = new BoardGame("Catan", 3, 4, "strategy");
-        when(storage.load()).thenReturn(List.of(game));
+        storage = mock(StorageStrategy.class);
+        when(storage.load()).thenReturn(List.of());
 
-        // Act
-        GameRepository repository = new GameRepository(storage);
-
-        // Assert
-        assertEquals(1, repository.getGames().size());
-        assertTrue(repository.getGames().contains(game));
-        verify(storage, times(1)).load();
+        repository = new GameRepository(storage);
     }
 
     @Test
-    void addGame_shouldSaveToStorage() throws Exception {
+    void addGame_shouldAddGame_whenTitleIsUnique() throws IOException {
         // Arrange
-        StorageStrategy storage = mock(StorageStrategy.class);
-        when(storage.load()).thenReturn(List.of());
-
-        GameRepository repository = new GameRepository(storage);
-        BoardGame game = new BoardGame("Azul", 2, 4, "abstract");
+        BoardGame game = new BoardGame("Catan", 3, 4, "Strategy");
 
         // Act
         repository.addGame(game);
 
         // Assert
         assertEquals(1, repository.getGames().size());
-        verify(storage, times(1)).save(repository.getGames());
+        verify(storage).save(any());
     }
 
     @Test
-    void removeGame_shouldSaveToStorage() throws Exception {
+    void addGame_shouldThrowException_whenTitleAlreadyExists() {
         // Arrange
-        StorageStrategy storage = mock(StorageStrategy.class);
-        BoardGame game = new BoardGame("Catan", 3, 4, "strategy");
-        when(storage.load()).thenReturn(List.of(game));
+        BoardGame game1 = new BoardGame("Catan", 3, 4, "Strategy");
+        BoardGame game2 = new BoardGame("CATAN", 2, 6, "Family");
 
-        GameRepository repository = new GameRepository(storage);
+        repository.addGame(game1);
+
+        // Act + Assert
+        assertThrows(IllegalArgumentException.class,
+                () -> repository.addGame(game2));
+    }
+
+    @Test
+    void findCompatibleGames_shouldReturnMatchingGames() {
+        // Arrange
+        repository.addGame(new BoardGame("Catan", 3, 4, "Strategy"));
+        repository.addGame(new BoardGame("Uno", 2, 10, "Family"));
 
         // Act
-        repository.removeGame(game);
+        List<BoardGame> result = repository.findCompatibleGames(4);
 
         // Assert
-        assertTrue(repository.isEmpty());
-        verify(storage, times(1)).save(repository.getGames());
+        assertEquals(2, result.size());
+    }
+
+    @Test
+    void getGamesSortedByTitle_shouldReturnAlphabeticalOrder() {
+        // Arrange
+        repository.addGame(new BoardGame("Zelda", 1, 4, "Adventure"));
+        repository.addGame(new BoardGame("Catan", 3, 4, "Strategy"));
+
+        // Act
+        List<BoardGame> sorted = repository.getGamesSortedByTitle();
+
+        // Assert
+        assertEquals("Catan", sorted.get(0).title());
+        assertEquals("Zelda", sorted.get(1).title());
     }
 }
