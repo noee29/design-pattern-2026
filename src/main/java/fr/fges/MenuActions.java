@@ -11,7 +11,6 @@ public class MenuActions {
     private final Random random;
     private final DayPolicy dayPolicy;
 
-
     public MenuActions(UserInput input, GameRepository repository, GamePrinter printer, Random random, DayPolicy dayPolicy) {
         this.input = input;
         this.repository = repository;
@@ -19,54 +18,37 @@ public class MenuActions {
         this.random = random;
         this.dayPolicy = dayPolicy;
     }
+
+    public boolean isWeekend() {
+        return dayPolicy.isWeekend();
+    }
+
     public void weekendSummary() {
 
-        if (!isSummaryAllowed()) {
-            displaySummaryNotAllowed();
+        if (!dayPolicy.isWeekend()) {
+            System.out.println("Summary is only available on weekends.");
             return;
         }
 
         if (repository.isEmpty()) {
-            displayEmptyCollection();
+            System.out.println("No board games in collection.");
             return;
         }
 
-        displaySummaryHeader();
-        displayRandomGamesSummary();
-    }
+        System.out.println("Summary (3 random games):");
 
-    private boolean isSummaryAllowed() {
-        return dayPolicy.isWeekend();
-    }
-
-    private void displaySummaryNotAllowed() {
-        System.out.println("Summary is only available on weekends.");
-    }
-
-    private void displayEmptyCollection() {
-        System.out.println("No board games in collection.");
-    }
-    private void displaySummaryHeader() {
-        System.out.println("=== Summary (3 random games) ===");
-    }
-    private void displayRandomGamesSummary() {
-
-        var games = repository.getGames();
-        int count = getSummaryCount(games.size());
+        List<BoardGame> games = repository.getGames();
+        int count = Math.min(3, games.size());
 
         for (int i = 0; i < count; i++) {
-            BoardGame game = pickRandomGame(games);
-            displayGame(game);
+            BoardGame game = games.get(random.nextInt(games.size()));
+            System.out.println(
+                    "- " + game.title() +
+                            " (" + game.minPlayers() + "-" +
+                            game.maxPlayers() + " players, " +
+                            game.category() + ")"
+            );
         }
-    }
-    private int getSummaryCount(int totalGames) {
-        return Math.min(3, totalGames);
-    }
-    private BoardGame pickRandomGame(List<BoardGame> games) {
-        return games.get(random.nextInt(games.size()));
-    }
-    private void displayGame(BoardGame game) {
-        System.out.println("- " + game);
     }
 
     public void addGame() {
@@ -78,7 +60,6 @@ public class MenuActions {
             System.out.println(e.getMessage());
         }
     }
-
 
     public void removeGame() {
         String title = input.getString("Title of game to remove");
@@ -98,9 +79,6 @@ public class MenuActions {
         printer.viewAllGames(repository);
     }
 
-    /**
-     * Separated for testability
-     */
     protected void exitApplication() {
         System.exit(0);
     }
@@ -114,7 +92,8 @@ public class MenuActions {
         String title = input.getString("Title");
         int minPlayers = input.getIntAtLeast("Minimum Players", 1);
         int maxPlayers = input.getIntAtLeastOther("Maximum Players", minPlayers);
-        String category = input.getString("Category (e.g., fantasy, cooperative, family, strategy)");
+        String category =
+                input.getString("Category (e.g., fantasy, cooperative, family, strategy)");
 
         return new BoardGame(title, minPlayers, maxPlayers, category);
     }
@@ -130,8 +109,8 @@ public class MenuActions {
             return;
         }
 
-        int index = random.nextInt(compatibleGames.size());
-        BoardGame game = compatibleGames.get(index);
+        BoardGame game =
+                compatibleGames.get(random.nextInt(compatibleGames.size()));
 
         System.out.println(
                 "Recommended game: \"" +
@@ -141,5 +120,4 @@ public class MenuActions {
                         game.category() + ")"
         );
     }
-
 }

@@ -1,59 +1,57 @@
 classDiagram
 
-%% ====== DOMAIN ======
-    class BoardGame {
-        +String title
-        +int minPlayers
-        +int maxPlayers
-        +String category
+    class Menu {
+        -UserInput input
+        -MenuActions actions
+        +Menu(GameRepository)
+        +handleMenu()
+        -displayMainMenu()
+        -handleChoice(String)
     }
 
-%% ====== STORAGE STRATEGY ======
-    class StorageStrategy {
-        <<interface>>
-        +load() List~BoardGame~
-        +save(games List~BoardGame~)
+    class MenuActions {
+        -UserInput input
+        -GameRepository repository
+        -GamePrinter printer
+        -Random random
+        -DayPolicy dayPolicy
+        +isWeekend() boolean
+        +addGame()
+        +removeGame()
+        +listAllGames()
+        +recommendGame()
+        +weekendSummary()
+        +exit()
+        -exitApplication()
+        -readGameFromUser() BoardGame
     }
 
-    class CsvStorage {
-        -String file
-        +load() List~BoardGame~
-        +save(games List~BoardGame~)
-    }
-
-    class JsonStorage {
-        -String file
-        +load() List~BoardGame~
-        +save(games List~BoardGame~)
-    }
-
-    StorageStrategy <|.. CsvStorage : implements
-    StorageStrategy <|.. JsonStorage : implements
-
-%% ====== REPOSITORY ======
     class GameRepository {
-        -List~BoardGame~ games
-        -StorageStrategy storage
-        +addGame(game BoardGame)
-        +removeGame(game BoardGame)
+        +addGame(BoardGame)
+        +removeGame(BoardGame)
         +getGames() List~BoardGame~
-        +getGamesSortedByTitle() List~BoardGame~
-        +findCompatibleGames(players int) List~BoardGame~
         +isEmpty() boolean
+        +findCompatibleGames(int) List~BoardGame~
     }
 
-    GameRepository --> StorageStrategy : uses
-    GameRepository --> BoardGame : manages
+    class BoardGame {
+        +title() String
+        +minPlayers() int
+        +maxPlayers() int
+        +category() String
+    }
 
-%% ====== VIEW ======
+    class UserInput {
+        +readChoice() String
+        +getString(String) String
+        +getIntAtLeast(String, int) int
+        +getIntAtLeastOther(String, int) int
+    }
+
     class GamePrinter {
-        +viewAllGames(repository GameRepository)
+        +viewAllGames(GameRepository)
     }
 
-    GamePrinter --> GameRepository : reads from
-    GamePrinter --> BoardGame : displays
-
-%% ====== DAY POLICY ======
     class DayPolicy {
         <<interface>>
         +isWeekend() boolean
@@ -63,50 +61,10 @@ classDiagram
         +isWeekend() boolean
     }
 
-    DayPolicy <|.. SystemDayPolicy : implements
-
-%% ====== INPUT ======
-    class UserInput {
-        +getString(prompt String) String
-        +getIntAtLeast(prompt String, min int) int
-        +getIntAtLeastOther(prompt String, min int) int
-        +readChoice() String
-    }
-
-%% ====== MENU ======
-    class Menu {
-        -UserInput input
-        -MenuActions actions
-        +handleMenu()
-    }
-
-    Menu --> UserInput : reads input
-    Menu --> MenuActions : delegates to
-
-    class MenuActions {
-        -UserInput input
-        -GameRepository repository
-        -GamePrinter printer
-        -Random random
-        -DayPolicy dayPolicy
-        +addGame()
-        +removeGame()
-        +listAllGames()
-        +recommendGame()
-        +exit()
-    }
-
-    MenuActions --> UserInput : queries
-    MenuActions --> GameRepository : modifies
-    MenuActions --> GamePrinter : displays via
-    MenuActions --> DayPolicy : checks
+    Menu --> MenuActions : delegates actions
+    MenuActions --> UserInput : reads user input
+    MenuActions --> GameRepository : manages games
+    MenuActions --> GamePrinter : displays games
     MenuActions --> BoardGame : creates / uses
-
-%% ====== MAIN ======
-    class Main {
-        +main(args String[])
-    }
-
-    Main --> Menu : creates
-    Main --> GameRepository : initializes
-    Main --> StorageStrategy : selects
+    MenuActions --> DayPolicy : checks day type
+    SystemDayPolicy ..|> DayPolicy : implements

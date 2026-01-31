@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class MenuActionsTest {
@@ -33,7 +32,7 @@ class MenuActionsTest {
     }
 
     @Test
-    void recommendGame_shouldPrintGame_whenCompatibleGameExists() {
+    void recommendGame_shouldSelectRandomGame_whenCompatibleGameExists() {
         // Arrange
         BoardGame game = new BoardGame("Catan", 3, 4, "Strategy");
 
@@ -46,10 +45,11 @@ class MenuActionsTest {
 
         // Assert
         verify(repository).findCompatibleGames(4);
+        verify(random).nextInt(1);
     }
 
     @Test
-    void recommendGame_shouldPrintMessage_whenNoGameFound() {
+    void recommendGame_shouldNotUseRandom_whenNoCompatibleGame() {
         // Arrange
         when(input.getIntAtLeast(anyString(), anyInt())).thenReturn(5);
         when(repository.findCompatibleGames(5)).thenReturn(List.of());
@@ -63,7 +63,7 @@ class MenuActionsTest {
     }
 
     @Test
-    void weekendSummary_shouldNotRun_whenNotWeekend() {
+    void weekendSummary_shouldStop_whenNotWeekend() {
         // Arrange
         when(dayPolicy.isWeekend()).thenReturn(false);
 
@@ -76,7 +76,7 @@ class MenuActionsTest {
     }
 
     @Test
-    void weekendSummary_shouldShowSummary_whenWeekendAndGamesExist() {
+    void weekendSummary_shouldDisplayRandomGame_whenWeekendAndGamesExist() {
         // Arrange
         when(dayPolicy.isWeekend()).thenReturn(true);
         when(repository.isEmpty()).thenReturn(false);

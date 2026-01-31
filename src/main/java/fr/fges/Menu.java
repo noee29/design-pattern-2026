@@ -12,8 +12,8 @@ public class Menu {
         this.input = new UserInput();
         GamePrinter printer = new GamePrinter();
 
-        Random random = new Random();              // injected ONCE
-        DayPolicy dayPolicy = new SystemDayPolicy(); // injected ONCE
+        Random random = new Random();
+        DayPolicy dayPolicy = new SystemDayPolicy();
 
         this.actions = new MenuActions(
                 input,
@@ -39,34 +39,48 @@ public class Menu {
             2. Remove Board Game
             3. List All Board Games
             4. Recommend Game
+            """);
+
+        if (actions.isWeekend()) {
+            System.out.println("""
+            5. View Summary (Weekend Special!)
+            6. Exit
+            Please select an option (1-6):
+            """);
+        } else {
+            System.out.println("""
             5. Exit
             Please select an option (1-5):
             """);
+        }
     }
-
     private void handleChoice(String choice) {
         while (true) {
-            switch (choice) {
-                case "1" -> {
-                    actions.addGame();
-                    return;
+
+            if (actions.isWeekend()) {
+                switch (choice) {
+                    case "1" -> { actions.addGame(); return; }
+                    case "2" -> { actions.removeGame(); return; }
+                    case "3" -> { actions.listAllGames(); return; }
+                    case "4" -> { actions.recommendGame(); return; }
+                    case "5" -> { actions.weekendSummary(); return; }
+                    case "6" -> actions.exit();
+                    default -> {
+                        System.out.println("Invalid choice. Please select a valid option.");
+                        choice = input.readChoice();
+                    }
                 }
-                case "2" -> {
-                    actions.removeGame();
-                    return;
-                }
-                case "3" -> {
-                    actions.listAllGames();
-                    return;
-                }
-                case "4" -> {
-                    actions.recommendGame();
-                    return;
-                }
-                case "5" -> actions.exit();
-                default -> {
-                    System.out.println("Invalid choice. Please select a valid option (1-5):");
-                    choice = input.readChoice();
+            } else {
+                switch (choice) {
+                    case "1" -> { actions.addGame(); return; }
+                    case "2" -> { actions.removeGame(); return; }
+                    case "3" -> { actions.listAllGames(); return; }
+                    case "4" -> { actions.recommendGame(); return; }
+                    case "5" -> actions.exit();
+                    default -> {
+                        System.out.println("Invalid choice. Please select a valid option.");
+                        choice = input.readChoice();
+                    }
                 }
             }
         }
