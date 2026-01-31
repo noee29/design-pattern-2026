@@ -33,7 +33,7 @@ public class Menu {
     }
 
     private void displayMainMenu() {
-        System.out.println("""
+        System.out.print("""
             === Board Game Collection ===
             1. Add Board Game
             2. Remove Board Game
@@ -42,7 +42,7 @@ public class Menu {
             """);
 
         if (actions.isWeekend()) {
-            System.out.println("""
+            System.out.print("""
             5. View Summary (Weekend Special!)
             6. Exit
             Please select an option (1-6):
