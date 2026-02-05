@@ -23,8 +23,7 @@ public class Menu {
 
             int maxChoice = policy.isWeekend() ? 6 : 5;
 
-            int choice = input.getIntBetween("Please select an option (1-" + maxChoice + ")", 1, maxChoice);
-
+            int choice = input.getIntBetween("Please select an option", 1, maxChoice);
             executeAction(choice);
         }
     }
@@ -37,27 +36,16 @@ public class Menu {
         System.out.println("4. Recommend Game");
 
         if (policy.isWeekend()) {
-            System.out.println("5. View Summary (Weekend Special!)");
+            System.out.println("5. Undo Last Action");
             System.out.println("6. Exit");
         } else {
-            System.out.println("5. Exit");
+            System.out.println("5. Undo Last Action");
+            System.out.println("6. Exit");
         }
     }
 
     private void executeAction(int choice) {
-        int actionKey;
-
-        if (policy.isWeekend()) {
-            actionKey = choice;
-        } else {
-            if (choice == 5) {
-                actionKey = 6;
-            } else {
-                actionKey = choice;
-            }
-        }
-
-        MenuAction action = actions.get(actionKey);
+        MenuAction action = actions.get(choice);
         if (action != null) {
             action.execute();
         } else {

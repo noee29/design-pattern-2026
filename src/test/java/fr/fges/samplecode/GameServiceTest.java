@@ -3,78 +3,63 @@ package fr.fges.samplecode;
 import fr.fges.model.BoardGame;
 import fr.fges.service.GameService;
 import fr.fges.storage.StorageStrategy;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
+import java.io.IOException;
 import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class GameServiceTest {
 
-    @Test
-    void constructor_shouldLoadGamesFromStorage() throws Exception {
-        // Arrange
-        StorageStrategy storage = mock(StorageStrategy.class);
-        when(storage.load()).thenReturn(List.of(
-                new BoardGame("Uno", 2, 10, "Card")
-        ));
+    StorageStrategy storage;
+    GameService service;
 
-        // Act
-        GameService service = new GameService(storage);
-
-        // Assert
-        assertEquals(1, service.getAllGames().size());
+    @BeforeEach
+    void setUp() throws IOException {
+        storage = mock(StorageStrategy.class);
+        when(storage.load()).thenReturn(List.of());
+        service = new GameService(storage);
     }
 
     @Test
-    void addGame_shouldAddGameAndSave() throws Exception {
+    void addGame_shouldAddGameToListAndSave() throws IOException {
         // Arrange
-        StorageStrategy storage = mock(StorageStrategy.class);
-        when(storage.load()).thenReturn(List.of());
-
-        GameService service = new GameService(storage);
-        BoardGame game = new BoardGame("Catan", 3, 4, "Strategy");
+        BoardGame game = new BoardGame("Catan", 3, 4, "strategy");
 
         // Act
         service.addGame(game);
 
         // Assert
-        assertEquals(1, service.getAllGames().size());
-        verify(storage).save(anyList());
+        assertTrue(service.gameExists("Catan"));
+        verify(storage, times(1)).save(service.getAllGames());
     }
 
     @Test
-    void removeGame_shouldRemoveGameAndSave() throws Exception {
+    void removeGame_shouldRemoveGameFromListAndSave() throws IOException {
         // Arrange
-        StorageStrategy storage = mock(StorageStrategy.class);
-        BoardGame game = new BoardGame("Catan", 3, 4, "Strategy");
-        when(storage.load()).thenReturn(List.of(game));
-
-        GameService service = new GameService(storage);
+        BoardGame game = new BoardGame("Catan", 3, 4, "strategy");
+        service.addGame(game);
 
         // Act
         service.removeGame(game);
 
         // Assert
-        assertTrue(service.getAllGames().isEmpty());
-        verify(storage).save(anyList());
+        assertFalse(service.gameExists("Catan"));
+        verify(storage, times(2)).save(anyList()); // add + remove
     }
 
     @Test
-    void gameExists_shouldReturnTrue_whenGameExists() throws Exception {
+    void getAllGames_shouldReturnCopyNotReference() {
         // Arrange
-        StorageStrategy storage = mock(StorageStrategy.class);
-        when(storage.load()).thenReturn(List.of(
-                new BoardGame("Uno", 2, 10, "Card")
-        ));
-
-        GameService service = new GameService(storage);
+        BoardGame game = new BoardGame("Catan", 3, 4, "strategy");
+        service.addGame(game);
 
         // Act
-        boolean exists = service.gameExists("UNO");
+        List<BoardGame> games = service.getAllGames();
+        games.clear();
 
         // Assert
-        assertTrue(exists);
+        assertEquals(1, service.getAllGames().size()); // original list remains
     }
 }

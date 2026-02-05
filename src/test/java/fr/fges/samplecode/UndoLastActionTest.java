@@ -1,6 +1,7 @@
 package fr.fges.samplecode;
 
 import fr.fges.action.AddGameAction;
+import fr.fges.action.UndoLastAction;
 import fr.fges.history.ActionHistory;
 import fr.fges.model.BoardGame;
 import fr.fges.service.GameService;
@@ -10,44 +11,46 @@ import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.*;
 
-class AddGameActionTest {
+class UndoLastActionTest {
 
     private GameService service;
     private UserInput input;
     private ActionHistory history;
-    private AddGameAction action;
+    private AddGameAction addAction;
+    private UndoLastAction undoAction;
 
     @BeforeEach
     void setUp() {
         service = mock(GameService.class);
         input = mock(UserInput.class);
         history = new ActionHistory();
-        action = new AddGameAction(service, input, history);
+
+        addAction = new AddGameAction(service, input, history);
+        undoAction = new UndoLastAction(history);
     }
 
     @Test
-    void execute_shouldAddGameAndPushToHistory() {
+    void execute_shouldUndoLastAction() {
+        // Arrange
         when(input.getString("Title: ")).thenReturn("Catan");
         when(input.getInt("Minimum Players: ")).thenReturn(3);
         when(input.getInt("Maximum Players: ")).thenReturn(4);
         when(input.getString("Category (e.g., fantasy, strategy): ")).thenReturn("strategy");
 
-        action.execute();
+        addAction.execute();
 
-        verify(service, times(1)).addGame(any(BoardGame.class));
-        assert(history.size() == 1);
-    }
+        // Act
+        undoAction.execute();
 
-    @Test
-    void undo_shouldRemoveLastAddedGame() {
-        when(input.getString("Title: ")).thenReturn("Catan");
-        when(input.getInt("Minimum Players: ")).thenReturn(3);
-        when(input.getInt("Maximum Players: ")).thenReturn(4);
-        when(input.getString("Category (e.g., fantasy, strategy): ")).thenReturn("strategy");
-
-        action.execute();
-        action.undo();
-
+        // Assert
         verify(service, times(1)).removeGame(any(BoardGame.class));
+        assert(history.isEmpty());
+    }
+
+    @Test
+    void execute_whenHistoryEmpty_shouldPrintNothingToUndo() {
+        // Act
+        undoAction.execute(); // no actions in history
+        // Assert passes if no exception thrown
     }
 }

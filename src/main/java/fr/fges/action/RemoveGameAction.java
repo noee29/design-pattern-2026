@@ -3,17 +3,21 @@ package fr.fges.action;
 import fr.fges.model.BoardGame;
 import fr.fges.service.GameService;
 import fr.fges.ui.UserInput;
+import fr.fges.history.ActionHistory;
 
 import java.util.List;
 
-public class RemoveGameAction implements MenuAction {
+public class RemoveGameAction implements UndoableAction {
 
     private final GameService service;
     private final UserInput input;
+    private final ActionHistory history;
+    private BoardGame lastRemoved;
 
-    public RemoveGameAction(GameService service, UserInput input) {
+    public RemoveGameAction(GameService service, UserInput input, ActionHistory history) {
         this.service = service;
         this.input = input;
+        this.history = history;
     }
 
     @Override
@@ -31,9 +35,19 @@ public class RemoveGameAction implements MenuAction {
         }
 
         int choice = input.getIntBetween("Select game number to remove", 1, games.size());
+        lastRemoved = games.get(choice - 1);
 
-        BoardGame gameToRemove = games.get(choice - 1);
-        service.removeGame(gameToRemove);
-        System.out.println("Board game \"" + gameToRemove.getTitle() + "\" removed successfully.");
+        service.removeGame(lastRemoved);
+        history.push(this);
+
+        System.out.println("Board game \"" + lastRemoved.getTitle() + "\" removed successfully.");
+    }
+
+    @Override
+    public void undo() {
+        if (lastRemoved != null) {
+            service.addGame(lastRemoved);
+            System.out.println("Undone: Added \"" + lastRemoved.getTitle() + "\" back to collection");
+        }
     }
 }
