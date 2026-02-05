@@ -34,4 +34,17 @@ public class BoardGame {
     public String toString() {
         return title + " (" + minPlayers + "-" + maxPlayers + " players, " + category + ")";
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        BoardGame other = (BoardGame) obj;
+        return title.equalsIgnoreCase(other.title);
+    }
+
+    @Override
+    public int hashCode() {
+        return title.toLowerCase().hashCode();
+    }
 }

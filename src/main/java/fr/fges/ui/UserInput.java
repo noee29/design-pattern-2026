@@ -15,7 +15,8 @@ public class UserInput {
         while (true) {
             try {
                 System.out.print(prompt + ": ");
-                return Integer.parseInt(scanner.nextLine().trim());
+                String input = scanner.nextLine().trim();
+                return Integer.parseInt(input);
             } catch (NumberFormatException e) {
                 System.out.println("Please enter a valid number.");
             }

@@ -16,19 +16,20 @@ public class Main {
 
     public static void main(String[] args) {
 
-        StorageStrategy storage = new CsvStorage("games.csv");
+        StorageStrategy storage = new CsvStorage("games.json");
         GameService service = new GameService(storage);
 
         UserInput input = new UserInput();
-        DayPolicy policy = new SystemDayPolicy();
         GamePrinter printer = new GamePrinter();
+
+        DayPolicy policy = new SystemDayPolicy();
 
         Map<Integer, MenuAction> actions = Map.of(
                 1, new AddGameAction(service, input),
                 2, new RemoveGameAction(service, input),
                 3, new ListGamesAction(service, printer),
                 4, new RecommendGameAction(service, input),
-                5, new WeekendSummaryAction(service, policy),
+                5, new WeekendSummaryAction(service),
                 6, new ExitAction()
         );
 

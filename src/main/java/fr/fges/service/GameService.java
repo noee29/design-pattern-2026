@@ -25,11 +25,15 @@ public class GameService {
         }
     }
 
+    public boolean gameExists(String title) {
+        return games.stream()
+                .anyMatch(game -> game.getTitle().equalsIgnoreCase(title));
+    }
+
     public void addGame(BoardGame game) {
         games.add(game);
         saveToStorage();
     }
-
     public void removeGame(BoardGame game) {
         games.remove(game);
         saveToStorage();

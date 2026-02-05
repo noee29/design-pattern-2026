@@ -1,7 +1,6 @@
 package fr.fges.action;
 
 import fr.fges.model.BoardGame;
-import fr.fges.policy.DayPolicy;
 import fr.fges.service.GameService;
 
 import java.util.ArrayList;
@@ -11,11 +10,9 @@ import java.util.List;
 public class WeekendSummaryAction implements MenuAction {
 
     private final GameService service;
-    private final DayPolicy policy;
 
-    public WeekendSummaryAction(GameService service, DayPolicy policy) {
+    public WeekendSummaryAction(GameService service) {
         this.service = service;
-        this.policy = policy;
     }
 
     @Override
@@ -29,7 +26,6 @@ public class WeekendSummaryAction implements MenuAction {
 
         System.out.println("\n=== Summary (3 random games) ===");
 
-        // Si moins de 3 jeux, afficher tous
         if (allGames.size() <= 3) {
             for (BoardGame game : allGames) {
                 System.out.println("- " + game.getTitle() + " (" +
@@ -37,7 +33,6 @@ public class WeekendSummaryAction implements MenuAction {
                         " players, " + game.getCategory() + ")");
             }
         } else {
-            // Sinon, afficher 3 jeux aléatoires
             List<BoardGame> shuffled = new ArrayList<>(allGames);
             Collections.shuffle(shuffled);
 

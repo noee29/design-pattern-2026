@@ -6,6 +6,7 @@ import fr.fges.ui.UserInput;
 
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 public class RecommendGameAction implements MenuAction {
 
@@ -20,12 +21,30 @@ public class RecommendGameAction implements MenuAction {
 
     @Override
     public void execute() {
-        List<BoardGame> games = service.getAllGames();
-        if (games.isEmpty()) {
-            System.out.println("No games available.");
+        List<BoardGame> allGames = service.getAllGames();
+
+        if (allGames.isEmpty()) {
+            System.out.println("No games in collection.");
             return;
         }
-        BoardGame game = games.get(random.nextInt(games.size()));
-        System.out.println("Recommended game: " + game.getTitle());
+
+        int playerCount = input.getIntAtLeast("How many players?", 1);
+
+        List<BoardGame> compatibleGames = allGames.stream()
+                .filter(game -> playerCount >= game.getMinPlayers() &&
+                        playerCount <= game.getMaxPlayers())
+                .collect(Collectors.toList());
+
+        if (compatibleGames.isEmpty()) {
+            System.out.println("No games available for " + playerCount + " players.");
+            return;
+        }
+
+        BoardGame recommendedGame = compatibleGames.get(random.nextInt(compatibleGames.size()));
+
+        System.out.println("Recommended game: \"" + recommendedGame.getTitle() +
+                "\" (" + recommendedGame.getMinPlayers() + "-" +
+                recommendedGame.getMaxPlayers() + " players, " +
+                recommendedGame.getCategory() + ")");
     }
 }

@@ -24,16 +24,17 @@ public class CsvStorage implements StorageStrategy {
         }
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            // Sauter l'en-tête
             String line = reader.readLine();
 
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
                 if (parts.length == 4) {
                     games.add(new BoardGame(
-                            parts[0],
-                            Integer.parseInt(parts[1]),
-                            Integer.parseInt(parts[2]),
-                            parts[3]
+                            parts[0].trim(),
+                            Integer.parseInt(parts[1].trim()),
+                            Integer.parseInt(parts[2].trim()),
+                            parts[3].trim()
                     ));
                 }
             }

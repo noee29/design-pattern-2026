@@ -16,13 +16,19 @@ public class AddGameAction implements MenuAction {
 
     @Override
     public void execute() {
-        String title = input.getString("Enter game title");
-        int minPlayers = input.getIntAtLeast("Enter minimum players", 1);
-        int maxPlayers = input.getIntAtLeast("Enter maximum players", minPlayers);
-        String category = input.getString("Enter game category");
+        String title = input.getString("Title");
+
+        if (service.gameExists(title)) {
+            System.out.println("Error: A game with title \"" + title + "\" already exists in the collection.");
+            return;
+        }
+
+        int minPlayers = input.getIntAtLeast("Minimum Players", 1);
+        int maxPlayers = input.getIntAtLeast("Maximum Players", minPlayers);
+        String category = input.getString("Category (e.g., fantasy, cooperative, strategy)");
 
         BoardGame game = new BoardGame(title, minPlayers, maxPlayers, category);
         service.addGame(game);
-        System.out.println("Game added.");
+        System.out.println("Board game added successfully.");
     }
 }
