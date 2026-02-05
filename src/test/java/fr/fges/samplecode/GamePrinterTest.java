@@ -1,8 +1,7 @@
 package fr.fges.samplecode;
 
-import fr.fges.*;
 import org.junit.jupiter.api.Test;
-import ui.GamePrinter;
+import fr.fges.ui.GamePrinter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;

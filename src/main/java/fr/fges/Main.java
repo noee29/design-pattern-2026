@@ -1,24 +1,37 @@
 package fr.fges;
 
-import fr.fges.policy.DayPolicy;
+import fr.fges.action.*;
 import fr.fges.policy.SystemDayPolicy;
 import fr.fges.service.GameService;
 import fr.fges.storage.CsvStorage;
 import fr.fges.storage.StorageStrategy;
+import fr.fges.ui.GamePrinter;
 import fr.fges.ui.Menu;
+import fr.fges.ui.UserInput;
+
+import java.util.Map;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        // Choix du stockage (exemple CSV)
         StorageStrategy storage = new CsvStorage("games.csv");
         GameService service = new GameService(storage);
 
-        DayPolicy dayPolicy = new SystemDayPolicy();
+        UserInput input = new UserInput();
+        SystemDayPolicy policy = new SystemDayPolicy();
+        GamePrinter printer = new GamePrinter();
 
-        // Le Menu gère TOUT en interne
-        Menu menu = new Menu(service, dayPolicy);
-        menu.handleMenu();
+        Map<Integer, MenuAction> actions = Map.of(
+                1, new AddGameAction(service, input),
+                2, new RemoveGameAction(service, input),
+                3, new ListGamesAction(service, printer),
+                4, new RecommendGameAction(service, input),
+                5, new WeekendSummaryAction(service),
+                6, new ExitAction()
+        );
+
+        Menu menu = new Menu(input, actions, policy);
+        menu.run();
     }
 }

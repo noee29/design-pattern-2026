@@ -1,4 +1,4 @@
-package ui;
+package fr.fges.ui;
 
 import fr.fges.model.BoardGame;
 import java.util.List;
