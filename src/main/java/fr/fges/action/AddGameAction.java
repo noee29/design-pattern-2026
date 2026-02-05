@@ -6,22 +6,23 @@ import fr.fges.ui.UserInput;
 
 public class AddGameAction implements MenuAction {
 
-    private final UserInput input;
     private final GameService service;
+    private final UserInput input;
 
-    public AddGameAction(UserInput input, GameService service) {
-        this.input = input;
+    public AddGameAction(GameService service, UserInput input) {
         this.service = service;
+        this.input = input;
     }
 
     @Override
     public void execute() {
-        String title = input.getString("Title");
-        int min = input.getIntAtLeast("Min players", 1);
-        int max = input.getIntAtLeast("Max players", min);
-        String category = input.getString("Category");
+        String title = input.getString("Enter game title");
+        int minPlayers = input.getIntAtLeast("Enter minimum players", 1);
+        int maxPlayers = input.getIntAtLeast("Enter maximum players", minPlayers);
+        String category = input.getString("Enter game category");
 
-        service.addGame(new BoardGame(title, min, max, category));
+        BoardGame game = new BoardGame(title, minPlayers, maxPlayers, category);
+        service.addGame(game);
         System.out.println("Game added.");
     }
 }

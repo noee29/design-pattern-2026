@@ -28,12 +28,14 @@ public class CsvStorage implements StorageStrategy {
 
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
-                games.add(new BoardGame(
-                        parts[0],
-                        Integer.parseInt(parts[1]),
-                        Integer.parseInt(parts[2]),
-                        parts[3]
-                ));
+                if (parts.length == 4) {
+                    games.add(new BoardGame(
+                            parts[0],
+                            Integer.parseInt(parts[1]),
+                            Integer.parseInt(parts[2]),
+                            parts[3]
+                    ));
+                }
             }
         }
 

@@ -9,61 +9,50 @@ public class Menu {
 
     private final UserInput input;
     private final Map<Integer, MenuAction> actions;
-    private final DayPolicy dayPolicy;
+    private final DayPolicy policy;
 
-    public Menu(UserInput input, Map<Integer, MenuAction> actions, DayPolicy dayPolicy) {
+    public Menu(UserInput input, Map<Integer, MenuAction> actions, DayPolicy policy) {
         this.input = input;
         this.actions = actions;
-        this.dayPolicy = dayPolicy;
+        this.policy = policy;
     }
 
     public void run() {
         while (true) {
-            show();
-            String choice = input.readChoice();
-
-            int max = dayPolicy.isWeekend() ? 6 : 5;
-
-            int c;
-            try {
-                c = Integer.parseInt(choice);
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid choice.");
-                continue;
-            }
-
-            if (c < 1 || c > max) {
-                System.out.println("Invalid choice.");
-                continue;
-            }
-
-            if (!dayPolicy.isWeekend() && c == 5) {
-                actions.get(6).execute(); // exit
-                continue;
-            }
-
-            actions.get(c).execute();
+            displayMenu();
+            int maxChoice = policy.isWeekend() ? 6 : 5;
+            int choice = input.getIntBetween("Your choice", 1, maxChoice);
+            executeAction(choice);
         }
     }
 
-    private void show() {
-        System.out.println("""
-        1. Add Board Game
-        2. Remove Board Game
-        3. List All Board Games
-        4. Recommend Game
-        """);
+    private void displayMenu() {
+        System.out.println("\n=== Board Game Manager ===");
+        System.out.println("1. Add a game");
+        System.out.println("2. Remove a game");
+        System.out.println("3. List all games");
+        System.out.println("4. Get a recommendation");
 
-        if (dayPolicy.isWeekend()) {
-            System.out.println("""
-            5. View Summary (Weekend Special!)
-            6. Exit
-            """);
+        if (policy.isWeekend()) {
+            System.out.println("5. Weekend summary");
+            System.out.println("6. Exit");
         } else {
-            System.out.println("""
-            5. Exit
-            """);
+            System.out.println("5. Exit");
         }
-        System.out.print("Please select an option: ");
+    }
+
+    private void executeAction(int choice) {
+        // Ajuster le choix si on n'est pas le weekend
+        int actionKey = choice;
+        if (!policy.isWeekend() && choice == 5) {
+            actionKey = 6; // Exit
+        }
+
+        MenuAction action = actions.get(actionKey);
+        if (action != null) {
+            action.execute();
+        } else {
+            System.out.println("Invalid choice.");
+        }
     }
 }

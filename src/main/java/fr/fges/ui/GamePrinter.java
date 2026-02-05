@@ -1,23 +1,21 @@
 package fr.fges.ui;
 
 import fr.fges.model.BoardGame;
+
 import java.util.List;
 
 public class GamePrinter {
 
-    public void viewAllGames(List<BoardGame> games) {
+    public void printGames(List<BoardGame> games) {
         if (games.isEmpty()) {
-            System.out.println("No board games in collection.");
+            System.out.println("No games in collection.");
             return;
         }
 
-        for (BoardGame g : games) {
-            System.out.println(
-                    "Game: " + g.title() +
-                            " (" + g.minPlayers() + "-" +
-                            g.maxPlayers() + " players) - " +
-                            g.category()
-            );
+        System.out.println("\n=== Your Board Game Collection ===");
+        for (int i = 0; i < games.size(); i++) {
+            System.out.println((i + 1) + ". " + games.get(i));
         }
+        System.out.println("Total: " + games.size() + " game(s)");
     }
 }

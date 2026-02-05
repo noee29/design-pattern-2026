@@ -1,25 +1,20 @@
 package fr.fges.action;
 
-import fr.fges.model.BoardGame;
 import fr.fges.service.GameService;
+import fr.fges.ui.GamePrinter;
 
 public class ListGamesAction implements MenuAction {
 
     private final GameService service;
+    private final GamePrinter printer;
 
-    public ListGamesAction(GameService service) {
+    public ListGamesAction(GameService service, GamePrinter printer) {
         this.service = service;
+        this.printer = printer;
     }
 
     @Override
     public void execute() {
-        if (service.getAllGames().isEmpty()) {
-            System.out.println("No games in collection.");
-            return;
-        }
-
-        for (BoardGame game : service.getAllGames()) {
-            System.out.println(game);
-        }
+        printer.printGames(service.getAllGames());
     }
 }
