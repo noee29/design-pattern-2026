@@ -1,4 +1,4 @@
-package fr.fges;
+package fr.fges.policy;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;

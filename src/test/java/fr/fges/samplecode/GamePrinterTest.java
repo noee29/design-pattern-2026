@@ -2,10 +2,10 @@ package fr.fges.samplecode;
 
 import fr.fges.*;
 import org.junit.jupiter.api.Test;
+import ui.GamePrinter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;

@@ -18,4 +18,9 @@
   "minPlayers" : 2,
   "maxPlayers" : 10,
   "category" : "family"
+}, {
+  "title" : "Jungle Speed",
+  "minPlayers" : 2,
+  "maxPlayers" : 6,
+  "category" : "family"
 } ]

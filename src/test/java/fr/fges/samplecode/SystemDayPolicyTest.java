@@ -1,6 +1,6 @@
 package fr.fges.samplecode;
 
-import fr.fges.SystemDayPolicy;
+import fr.fges.policy.SystemDayPolicy;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

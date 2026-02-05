@@ -1,7 +1,7 @@
 package fr.fges.samplecode;
 
-import fr.fges.BoardGame;
-import fr.fges.JsonStorage;
+import fr.fges.model.BoardGame;
+import fr.fges.storage.JsonStorage;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;

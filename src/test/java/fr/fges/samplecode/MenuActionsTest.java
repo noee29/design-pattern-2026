@@ -1,8 +1,13 @@
 package fr.fges.samplecode;
 
 import fr.fges.*;
+import fr.fges.action.MenuActions;
+import fr.fges.model.BoardGame;
+import fr.fges.policy.DayPolicy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ui.GamePrinter;
+import ui.UserInput;
 
 import java.util.List;
 import java.util.Random;

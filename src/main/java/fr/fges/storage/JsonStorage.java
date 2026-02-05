@@ -1,7 +1,8 @@
-package fr.fges;
+package fr.fges.storage;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.fges.model.BoardGame;
 
 import java.io.File;
 import java.io.IOException;

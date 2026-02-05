@@ -1,7 +1,9 @@
 package fr.fges.samplecode;
 
 import fr.fges.*;
+import fr.fges.storage.StorageStrategy;
 import org.junit.jupiter.api.Test;
+import ui.Menu;
 
 import static org.mockito.Mockito.*;
 

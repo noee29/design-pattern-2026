@@ -1,4 +1,6 @@
-package fr.fges;
+package fr.fges.storage;
+
+import fr.fges.model.BoardGame;
 
 import java.io.IOException;
 import java.util.List;
