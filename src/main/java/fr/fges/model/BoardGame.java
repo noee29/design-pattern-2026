@@ -2,10 +2,14 @@ package fr.fges.model;
 
 public class BoardGame {
 
-    private final String title;
-    private final int minPlayers;
-    private final int maxPlayers;
-    private final String category;
+    private String title;
+    private int minPlayers;
+    private int maxPlayers;
+    private String category;
+
+    // Constructeur vide obligatoire pour Jackson
+    public BoardGame() {
+    }
 
     public BoardGame(String title, int minPlayers, int maxPlayers, String category) {
         this.title = title;
@@ -38,8 +42,7 @@ public class BoardGame {
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        BoardGame other = (BoardGame) obj;
+        if (!(obj instanceof BoardGame other)) return false;
         return title.equalsIgnoreCase(other.title);
     }
 

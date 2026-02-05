@@ -1,2 +1,26 @@
-title,minPlayers,maxPlayers,category
-w45,23,25,hh
+[ {
+  "title" : "Catan",
+  "minPlayers" : 2,
+  "maxPlayers" : 6,
+  "category" : "strategy"
+}, {
+  "title" : "Monopoly",
+  "minPlayers" : 2,
+  "maxPlayers" : 8,
+  "category" : "family"
+}, {
+  "title" : "Jungle Speed",
+  "minPlayers" : 2,
+  "maxPlayers" : 6,
+  "category" : "family"
+}, {
+  "title" : "Dooble",
+  "minPlayers" : 2,
+  "maxPlayers" : 6,
+  "category" : "family"
+}, {
+  "title" : "Bingo",
+  "minPlayers" : 2,
+  "maxPlayers" : 10,
+  "category" : "family"
+} ]

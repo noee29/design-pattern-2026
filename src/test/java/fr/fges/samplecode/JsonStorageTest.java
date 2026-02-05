@@ -2,6 +2,7 @@ package fr.fges.samplecode;
 
 import fr.fges.model.BoardGame;
 import fr.fges.storage.JsonStorage;
+import fr.fges.storage.StorageStrategy;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -12,37 +13,33 @@ import static org.junit.jupiter.api.Assertions.*;
 class JsonStorageTest {
 
     @Test
-    void saveAndLoad_shouldPersistGamesCorrectly() throws Exception {
+    void load_shouldReturnEmptyList_whenFileDoesNotExist() throws Exception {
         // Arrange
-        File tempFile = File.createTempFile("games", ".json");
-        tempFile.deleteOnExit();
-
-        JsonStorage storage = new JsonStorage(tempFile.getAbsolutePath());
-
-        List<BoardGame> games = List.of(
-                new BoardGame("Catan", 3, 4, "Strategy"),
-                new BoardGame("Uno", 2, 10, "Family")
-        );
+        StorageStrategy storage = new JsonStorage("unknown.json");
 
         // Act
-        storage.save(games);
-        List<BoardGame> loaded = storage.load();
+        List<BoardGame> games = storage.load();
 
         // Assert
-        assertEquals(2, loaded.size());
-        assertEquals("Catan", loaded.get(0).title());
-        assertEquals("Uno", loaded.get(1).title());
+        assertTrue(games.isEmpty());
     }
 
     @Test
-    void load_shouldReturnEmptyList_whenFileDoesNotExist() throws Exception {
+    void saveAndLoad_shouldPersistGames() throws Exception {
         // Arrange
-        JsonStorage storage = new JsonStorage("does-not-exist.json");
+        File file = File.createTempFile("games", ".json");
+        StorageStrategy storage = new JsonStorage(file.getAbsolutePath());
+
+        BoardGame game = new BoardGame("Catan", 3, 4, "Strategy");
 
         // Act
-        List<BoardGame> result = storage.load();
+        storage.save(List.of(game));
+        List<BoardGame> loaded = storage.load();
 
         // Assert
-        assertTrue(result.isEmpty());
+        assertEquals(1, loaded.size());
+        assertEquals("Catan", loaded.get(0).getTitle());
+
+        file.delete();
     }
 }

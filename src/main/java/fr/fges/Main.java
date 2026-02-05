@@ -4,7 +4,7 @@ import fr.fges.action.*;
 import fr.fges.policy.DayPolicy;
 import fr.fges.policy.SystemDayPolicy;
 import fr.fges.service.GameService;
-import fr.fges.storage.CsvStorage;
+import fr.fges.storage.JsonStorage;
 import fr.fges.storage.StorageStrategy;
 import fr.fges.ui.GamePrinter;
 import fr.fges.ui.Menu;
@@ -16,7 +16,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        StorageStrategy storage = new CsvStorage("games.json");
+        StorageStrategy storage = new JsonStorage("games.json");
         GameService service = new GameService(storage);
 
         UserInput input = new UserInput();

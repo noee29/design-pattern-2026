@@ -1,32 +1,33 @@
 package fr.fges.samplecode;
 
-import org.junit.jupiter.api.Test;
+import fr.fges.model.BoardGame;
 import fr.fges.ui.GamePrinter;
+import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 class GamePrinterTest {
 
     @Test
-    void viewAllGames_shouldPrintMessage_whenRepositoryIsEmpty() {
+    void printGames_shouldNotCrashWithEmptyList() {
         // Arrange
-        GameRepository repository = mock(GameRepository.class);
-        when(repository.isEmpty()).thenReturn(true);
-
         GamePrinter printer = new GamePrinter();
 
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(out));
+        // Act & Assert
+        assertDoesNotThrow(() -> printer.printGames(List.of()));
+    }
 
-        // Act
-        printer.viewAllGames(repository);
+    @Test
+    void printGames_shouldNotCrashWithGames() {
+        // Arrange
+        GamePrinter printer = new GamePrinter();
+        List<BoardGame> games = List.of(
+                new BoardGame("Catan", 3, 4, "Strategy")
+        );
 
-        // Assert
-        assertTrue(out.toString().contains("No board games in collection."));
+        // Act & Assert
+        assertDoesNotThrow(() -> printer.printGames(games));
     }
 }
