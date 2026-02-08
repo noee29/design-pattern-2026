@@ -43,3 +43,24 @@ Enfin, la logique de recherche a été testée de manière isolée grâce à la 
 
 
 **Les classes d’entrée/sortie (UserInput et GamePrinter) ont été exclues ou testées minimalement, car elles ne contiennent pas de logique métier.**
+
+
+------------------------------------------------------------------------------
+
+**Rapport TP 3 Marc Maalouf Noé Labbé 09/02/26**
+
+Nous avons commencé par revoir toute l'architecture de notre projet en découpant en différentes classes et layers et en créeant de nouveaux packages pour mieux organiser notre code. 
+
+La fonctionnalité 1 (Undo Last Action) a été implémentée à l'aide du command pattern en créant une classe AddGameAction qui collecte les entrées validées de l'utilisateur et appelle GameService pour créer et stocker le nouveau jeu. 
+
+  
+
+ Une commande annulable est également envoyée à ActionHistory, ce qui permet d'annuler l'opération d'ajout à l'aide de la fonctionnalité Annuler.
+
+
+
+
+
+
+
+Nous avons ajouté la fonctionnalité 2 « Games for X players » en créant une nouvelle classe FindGamesByPlayersAction (Command Pattern) et une nouvelle méthode de filtrage dans GameService qui renvoie les jeux correspondant à un nombre de joueurs et les trie par ordre alphabétique.

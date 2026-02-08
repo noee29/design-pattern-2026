@@ -1,0 +1,240 @@
+classDiagram
+
+%% =======================
+%% ========= MAIN ========
+%% =======================
+
+    class Main {
+        +main(String[])
+    }
+
+    Main --> Menu : creates
+    Main --> GameService : creates
+    Main --> ActionHistory : creates
+    Main --> MenuAction : registers
+
+%% =======================
+%% ========= UI ==========
+%% =======================
+
+    class Menu {
+        -UserInput input
+        -Map~Integer, MenuAction~ actions
+        -DayPolicy policy
+        +Menu(UserInput, Map~Integer, MenuAction~, DayPolicy)
+        +run()
+        -displayMenu()
+        -executeAction(int)
+    }
+
+    class UserInput {
+        -Scanner scanner
+        +getString(String) String
+        +getInt(String) int
+        +getIntBetween(String, int, int) int
+        +getIntAtLeast(String, int) int
+    }
+
+    class GamePrinter {
+        +printGames(List~BoardGame~)
+    }
+
+    Menu --> UserInput : reads input
+    Menu --> MenuAction : executes
+    Menu --> DayPolicy : checks day type
+
+%% =======================
+%% ====== ACTIONS ========
+%% =======================
+
+    class MenuAction {
+        <<interface>>
+        +execute()
+    }
+
+    class Undoable {
+        <<interface>>
+        +undo()
+    }
+
+    class UndoableAction {
+        <<interface>>
+        +execute()
+        +undo()
+    }
+
+    MenuAction <|.. UndoableAction : extends
+
+    class AddGameAction {
+        -GameService service
+        -UserInput input
+        -ActionHistory history
+        -BoardGame lastAdded
+        +AddGameAction(GameService, UserInput, ActionHistory)
+        +execute()
+        +undo()
+    }
+
+    class RemoveGameAction {
+        -GameService service
+        -UserInput input
+        -ActionHistory history
+        -BoardGame lastRemoved
+        +RemoveGameAction(GameService, UserInput, ActionHistory)
+        +execute()
+        +undo()
+    }
+
+    class ListGamesAction {
+        -GameService service
+        -GamePrinter printer
+        +ListGamesAction(GameService, GamePrinter)
+        +execute()
+    }
+
+    class FindGamesByPlayersAction {
+        -GameService service
+        -UserInput input
+        +FindGamesByPlayersAction(GameService, UserInput)
+        +execute()
+    }
+
+    class RecommendGameAction {
+        -GameService service
+        -UserInput input
+        -Random random
+        +RecommendGameAction(GameService, UserInput)
+        +execute()
+    }
+
+    class WeekendSummaryAction {
+        -GameService service
+        +WeekendSummaryAction(GameService)
+        +execute()
+    }
+
+    class UndoLastAction {
+        -ActionHistory history
+        +UndoLastAction(ActionHistory)
+        +execute()
+    }
+
+    class ExitAction {
+        +execute()
+    }
+
+    MenuAction <|.. AddGameAction : implements
+    MenuAction <|.. RemoveGameAction : implements
+    MenuAction <|.. ListGamesAction : implements
+    MenuAction <|.. FindGamesByPlayersAction : implements
+    MenuAction <|.. RecommendGameAction : implements
+    MenuAction <|.. WeekendSummaryAction : implements
+    MenuAction <|.. UndoLastAction : implements
+    MenuAction <|.. ExitAction : implements
+
+    UndoableAction <|.. AddGameAction : implements
+    UndoableAction <|.. RemoveGameAction : implements
+
+    AddGameAction --> ActionHistory : pushes
+    RemoveGameAction --> ActionHistory : pushes
+    UndoLastAction --> ActionHistory : pops
+
+%% =======================
+%% ====== HISTORY ========
+%% =======================
+
+    class ActionHistory {
+        -Stack~UndoableAction~ stack
+        +push(UndoableAction)
+        +pop() UndoableAction
+        +isEmpty() boolean
+        +size() int
+    }
+
+    ActionHistory --> UndoableAction : stores
+
+%% =======================
+%% ====== SERVICE ========
+%% =======================
+
+    class GameService {
+        -StorageStrategy storage
+        -List~BoardGame~ games
+        +GameService(StorageStrategy)
+        +findGamesByPlayers(int) List~BoardGame~
+        +gameExists(String) boolean
+        +addGame(BoardGame)
+        +removeGame(BoardGame)
+        +getAllGames() List~BoardGame~
+        -loadFromStorage()
+        -saveToStorage()
+    }
+
+    GameService --> BoardGame : manages
+    GameService --> StorageStrategy : uses
+
+%% =======================
+%% ====== MODEL ==========
+%% =======================
+
+    class BoardGame {
+        -String title
+        -int minPlayers
+        -int maxPlayers
+        -String category
+        +BoardGame()
+        +BoardGame(String, int, int, String)
+        +getTitle() String
+        +getMinPlayers() int
+        +getMaxPlayers() int
+        +getCategory() String
+        +toString() String
+        +equals(Object) boolean
+        +hashCode() int
+    }
+
+%% =======================
+%% ====== POLICY =========
+%% =======================
+
+    class DayPolicy {
+        <<interface>>
+        +isWeekend() boolean
+    }
+
+    class SystemDayPolicy {
+        +isWeekend() boolean
+    }
+
+    DayPolicy <|.. SystemDayPolicy : implements
+
+%% =======================
+%% ====== STORAGE ========
+%% =======================
+
+    class StorageStrategy {
+        <<interface>>
+        +load() List~BoardGame~
+        +save(List~BoardGame~)
+    }
+
+    class CsvStorage {
+        -String file
+        +CsvStorage(String)
+        +load() List~BoardGame~
+        +save(List~BoardGame~)
+    }
+
+    class JsonStorage {
+        -String file
+        -ObjectMapper mapper
+        +JsonStorage(String)
+        +load() List~BoardGame~
+        +save(List~BoardGame~)
+    }
+
+    StorageStrategy <|.. CsvStorage : implements
+    StorageStrategy <|.. JsonStorage : implements
+
+    CsvStorage --> BoardGame : serializes
+    JsonStorage --> BoardGame : serializes
