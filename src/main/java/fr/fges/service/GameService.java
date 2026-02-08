@@ -25,6 +25,18 @@ public class GameService {
         }
     }
 
+    public List<BoardGame> findGamesByPlayers(int playerCount) {
+        return games.stream()
+                .filter(g ->
+                        playerCount >= g.getMinPlayers() &&
+                                playerCount <= g.getMaxPlayers()
+                )
+                .sorted((a, b) ->
+                        a.getTitle().compareToIgnoreCase(b.getTitle())
+                )
+                .toList();
+    }
+
     public boolean gameExists(String title) {
         return games.stream()
                 .anyMatch(game -> game.getTitle().equalsIgnoreCase(title));

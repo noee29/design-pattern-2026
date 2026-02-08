@@ -21,7 +21,7 @@ public class Menu {
         while (true) {
             displayMenu();
 
-            int maxChoice = policy.isWeekend() ? 6 : 5;
+            int maxChoice = policy.isWeekend() ? 7 : 7;
 
             int choice = input.getIntBetween("Please select an option", 1, maxChoice);
             executeAction(choice);
@@ -34,13 +34,14 @@ public class Menu {
         System.out.println("2. Remove Board Game");
         System.out.println("3. List All Board Games");
         System.out.println("4. Recommend Game");
+        System.out.println("5. Games for X Players");
 
         if (policy.isWeekend()) {
-            System.out.println("5. Undo Last Action");
-            System.out.println("6. Exit");
+            System.out.println("6. Undo Last Action");
+            System.out.println("7. Exit");
         } else {
-            System.out.println("5. Undo Last Action");
-            System.out.println("6. Exit");
+            System.out.println("6. Undo Last Action");
+            System.out.println("7. Exit");
         }
     }
 

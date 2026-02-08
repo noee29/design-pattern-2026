@@ -10,6 +10,7 @@ import fr.fges.storage.StorageStrategy;
 import fr.fges.ui.GamePrinter;
 import fr.fges.ui.Menu;
 import fr.fges.ui.UserInput;
+import fr.fges.action.FindGamesByPlayersAction;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,13 +34,14 @@ public class Main {
         actions.put(2, new RemoveGameAction(service, input, history));
         actions.put(3, new ListGamesAction(service, printer));
         actions.put(4, new RecommendGameAction(service, input));
+        actions.put(5, new FindGamesByPlayersAction(service, input));
 
         if (policy.isWeekend()) {
-            actions.put(5, new UndoLastAction(history));
-            actions.put(6, new ExitAction());
+            actions.put(6, new UndoLastAction(history));
+            actions.put(7, new ExitAction());
         } else {
-            actions.put(5, new UndoLastAction(history));
-            actions.put(6, new ExitAction());
+            actions.put(6, new UndoLastAction(history));
+            actions.put(7, new ExitAction());
         }
 
         Menu menu = new Menu(input, actions, policy);
