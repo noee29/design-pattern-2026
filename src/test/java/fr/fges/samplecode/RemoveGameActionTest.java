@@ -1,6 +1,5 @@
 package fr.fges.samplecode;
 
-import fr.fges.action.RemoveGameAction;
 import fr.fges.businesslogic.ActionHistory;
 import fr.fges.model.BoardGame;
 import fr.fges.service.GameService;

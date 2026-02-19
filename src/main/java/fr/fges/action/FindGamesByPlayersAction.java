@@ -17,6 +17,9 @@ public class FindGamesByPlayersAction implements MenuAction {
     }
 
     @Override
+    public String getLabel() { return "Games for X Players"; }
+
+    @Override
     public void execute() {
         int count = input.getIntAtLeast("Number of players", 1);
 

@@ -13,6 +13,9 @@ public class UndoLastAction implements MenuAction {
     }
 
     @Override
+    public String getLabel() { return "Undo Last Action"; }
+
+    @Override
     public void execute() {
         if (history.isEmpty()) {
             System.out.println("Nothing to undo.");

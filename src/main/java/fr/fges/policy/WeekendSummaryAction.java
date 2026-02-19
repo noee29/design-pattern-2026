@@ -17,6 +17,9 @@ public class WeekendSummaryAction implements MenuAction {
     }
 
     @Override
+    public String getLabel() { return "View Summary (Weekend Special!)"; }
+
+    @Override
     public void execute() {
         List<BoardGame> allGames = service.getAllGames();
 

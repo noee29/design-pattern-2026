@@ -21,6 +21,9 @@ public class RecommendGameAction implements MenuAction {
     }
 
     @Override
+    public String getLabel() { return "Recommend Game"; }
+
+    @Override
     public void execute() {
         List<BoardGame> allGames = service.getAllGames();
 

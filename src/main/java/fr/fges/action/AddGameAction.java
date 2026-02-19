@@ -20,6 +20,9 @@ public class AddGameAction implements UndoableAction<BoardGame> {
     }
 
     @Override
+    public String getLabel() { return "Add Board Game"; }
+
+    @Override
     public void execute() {
         String title = input.getString("Title: ");
         int minPlayers = input.getInt("Minimum Players: ");

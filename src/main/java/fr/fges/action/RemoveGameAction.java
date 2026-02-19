@@ -22,6 +22,9 @@ public class RemoveGameAction implements UndoableAction<BoardGame> {
     }
 
     @Override
+    public String getLabel() { return "Remove Board Game"; }
+
+    @Override
     public void execute() {
         List<BoardGame> games = service.getAllGames();
 

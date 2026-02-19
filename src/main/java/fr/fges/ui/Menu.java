@@ -9,12 +9,10 @@ public class Menu {
 
     private final UserInput input;
     private final List<MenuAction> actions;
-    private final DayPolicy policy;
 
     public Menu(UserInput input, List<MenuAction> actions, DayPolicy policy) {
         this.input = input;
         this.actions = actions;
-        this.policy = policy;
     }
 
     public void run() {
@@ -27,27 +25,12 @@ public class Menu {
 
     private void displayMenu() {
         System.out.println("\n=== Board Game Collection ===");
-        System.out.println("1. Add Board Game");
-        System.out.println("2. Remove Board Game");
-        System.out.println("3. List All Board Games");
-        System.out.println("4. Recommend Game");
-        System.out.println("5. Games for X Players");
-        System.out.println("6. Undo Last Action");
-
-        if (policy.isWeekend()) {
-            System.out.println("7. Weekend Summary");
-            System.out.println("8. Exit");
-        } else {
-            System.out.println("7. Exit");
+        for (int i = 0; i < actions.size(); i++) {
+            System.out.println((i + 1) + ". " + actions.get(i).getLabel());
         }
     }
 
     private void executeAction(int choice) {
-        int index = choice - 1;
-        if (index >= 0 && index < actions.size()) {
-            actions.get(index).execute();
-        } else {
-            System.out.println("Invalid choice.");
-        }
+        actions.get(choice - 1).execute();
     }
 }

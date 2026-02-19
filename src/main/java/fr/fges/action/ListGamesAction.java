@@ -14,6 +14,9 @@ public class ListGamesAction implements MenuAction {
     }
 
     @Override
+    public String getLabel() { return "List All Board Games"; }
+
+    @Override
     public void execute() {
         printer.printGames(service.getAllGames());
     }

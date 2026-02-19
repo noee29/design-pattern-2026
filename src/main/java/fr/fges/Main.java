@@ -37,6 +37,7 @@ public class Main {
         actions.add(new RecommendGameAction(service, input));
         actions.add(new FindGamesByPlayersAction(service, input));
         actions.add(new UndoLastAction(history));
+        actions.add(new TournamentAction(service, input));
 
 
         if (policy.isWeekend()) {
