@@ -9,10 +9,10 @@ class BoardGameTest {
 
     @Test
     void constructor_shouldSetAllFields() {
-        // Arrange
+        // Arrange & Act
         BoardGame game = new BoardGame("Catan", 3, 4, "Strategy");
 
-        // Act & Assert
+        // Assert
         assertEquals("Catan", game.getTitle());
         assertEquals(3, game.getMinPlayers());
         assertEquals(4, game.getMaxPlayers());

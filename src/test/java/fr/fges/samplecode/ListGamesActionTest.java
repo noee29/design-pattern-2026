@@ -12,13 +12,11 @@ import static org.mockito.Mockito.*;
 class ListGamesActionTest {
 
     @Test
-    void execute_shouldPrintGames() {
+    void execute_shouldDelegatePrintToGamePrinter() {
         // Arrange
         GameService service = mock(GameService.class);
         GamePrinter printer = mock(GamePrinter.class);
-
         when(service.getAllGames()).thenReturn(List.of());
-
         ListGamesAction action = new ListGamesAction(service, printer);
 
         // Act

@@ -14,7 +14,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class FindGamesByPlayersActionTest {
 
     static class FakeStorage implements StorageStrategy {
-
         @Override
         public List<BoardGame> load() {
             return List.of(
@@ -24,10 +23,8 @@ class FindGamesByPlayersActionTest {
                     new BoardGame("7 Wonders", 3, 7, "strategy")
             );
         }
-
         @Override
-        public void save(List<BoardGame> games) {
-        }
+        public void save(List<BoardGame> games) {}
     }
 
     static class FakeInput extends UserInput {
@@ -39,13 +36,14 @@ class FindGamesByPlayersActionTest {
 
     @Test
     void findGamesByPlayers_shouldFilterAndSortCorrectly() {
-
+        // Arrange
         GameService service = new GameService(new FakeStorage());
 
-        var result = service.findGamesByPlayers(4);
+        // Act
+        List<BoardGame> result = service.findGamesByPlayers(4);
 
+        // Assert
         assertEquals(3, result.size());
-
         assertEquals("7 Wonders", result.get(0).getTitle());
         assertEquals("Catan", result.get(1).getTitle());
         assertEquals("Pandemic", result.get(2).getTitle());
@@ -53,11 +51,11 @@ class FindGamesByPlayersActionTest {
 
     @Test
     void action_execute_shouldNotThrow() {
-
+        // Arrange
         GameService service = new GameService(new FakeStorage());
-        FindGamesByPlayersAction action =
-                new FindGamesByPlayersAction(service, new FakeInput());
+        FindGamesByPlayersAction action = new FindGamesByPlayersAction(service, new FakeInput());
 
+        // Act & Assert
         assertDoesNotThrow(action::execute);
     }
 }

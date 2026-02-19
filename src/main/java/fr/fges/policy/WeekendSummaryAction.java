@@ -1,5 +1,6 @@
-package fr.fges.action;
+package fr.fges.policy;
 
+import fr.fges.action.MenuAction;
 import fr.fges.model.BoardGame;
 import fr.fges.service.GameService;
 
@@ -35,7 +36,6 @@ public class WeekendSummaryAction implements MenuAction {
         } else {
             List<BoardGame> shuffled = new ArrayList<>(allGames);
             Collections.shuffle(shuffled);
-
             for (int i = 0; i < 3; i++) {
                 BoardGame game = shuffled.get(i);
                 System.out.println("- " + game.getTitle() + " (" +

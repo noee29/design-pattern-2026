@@ -18,9 +18,7 @@ public class JsonStorage implements StorageStrategy {
     public JsonStorage(String file) {
         this.file = file;
         this.mapper = new ObjectMapper();
-
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
-
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
     }
 
@@ -28,7 +26,6 @@ public class JsonStorage implements StorageStrategy {
     public List<BoardGame> load() throws IOException {
         File f = new File(file);
         if (!f.exists() || f.length() == 0) return List.of();
-
         return mapper.readValue(f, new TypeReference<>() {});
     }
 

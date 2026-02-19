@@ -1,19 +1,20 @@
 package fr.fges;
 
 import fr.fges.action.*;
-import fr.fges.history.ActionHistory;
+import fr.fges.businesslogic.ActionHistory;
+import fr.fges.businesslogic.UndoLastAction;
 import fr.fges.policy.DayPolicy;
 import fr.fges.policy.SystemDayPolicy;
+import fr.fges.policy.WeekendSummaryAction;
 import fr.fges.service.GameService;
 import fr.fges.storage.JsonStorage;
 import fr.fges.storage.StorageStrategy;
 import fr.fges.ui.GamePrinter;
 import fr.fges.ui.Menu;
 import fr.fges.ui.UserInput;
-import fr.fges.action.FindGamesByPlayersAction;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
 
@@ -29,19 +30,20 @@ public class Main {
 
         ActionHistory history = new ActionHistory();
 
-        Map<Integer, MenuAction> actions = new HashMap<>();
-        actions.put(1, new AddGameAction(service, input, history));
-        actions.put(2, new RemoveGameAction(service, input, history));
-        actions.put(3, new ListGamesAction(service, printer));
-        actions.put(4, new RecommendGameAction(service, input));
-        actions.put(5, new FindGamesByPlayersAction(service, input));
+        List<MenuAction> actions = new ArrayList<>();
+        actions.add(new AddGameAction(service, input, history));
+        actions.add(new RemoveGameAction(service, input, history));
+        actions.add(new ListGamesAction(service, printer));
+        actions.add(new RecommendGameAction(service, input));
+        actions.add(new FindGamesByPlayersAction(service, input));
+        actions.add(new UndoLastAction(history));
+
 
         if (policy.isWeekend()) {
-            actions.put(6, new UndoLastAction(history));
-            actions.put(7, new ExitAction());
+            actions.add(new WeekendSummaryAction(service));
+            actions.add(new ExitAction());
         } else {
-            actions.put(6, new UndoLastAction(history));
-            actions.put(7, new ExitAction());
+            actions.add(new ExitAction());
         }
 
         Menu menu = new Menu(input, actions, policy);

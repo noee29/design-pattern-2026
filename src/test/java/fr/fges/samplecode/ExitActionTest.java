@@ -3,12 +3,12 @@ package fr.fges.samplecode;
 import fr.fges.action.ExitAction;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ExitActionTest {
 
     @Test
-    void execute_shouldExitApplication() {
+    void execute_shouldCallSystemExit() {
         // Arrange
         ExitAction action = new ExitAction();
 

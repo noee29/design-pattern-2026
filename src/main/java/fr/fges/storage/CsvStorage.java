@@ -19,14 +19,11 @@ public class CsvStorage implements StorageStrategy {
         List<BoardGame> games = new ArrayList<>();
 
         File f = new File(file);
-        if (!f.exists()) {
-            return games;
-        }
+        if (!f.exists()) return games;
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            // Sauter l'en-tête
-            String line = reader.readLine();
-
+            reader.readLine();
+            String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
                 if (parts.length == 4) {
@@ -48,14 +45,9 @@ public class CsvStorage implements StorageStrategy {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write("title,minPlayers,maxPlayers,category");
             writer.newLine();
-
             for (BoardGame g : games) {
-                writer.write(
-                        g.getTitle() + "," +
-                                g.getMinPlayers() + "," +
-                                g.getMaxPlayers() + "," +
-                                g.getCategory()
-                );
+                writer.write(g.getTitle() + "," + g.getMinPlayers() + "," +
+                        g.getMaxPlayers() + "," + g.getCategory());
                 writer.newLine();
             }
         }

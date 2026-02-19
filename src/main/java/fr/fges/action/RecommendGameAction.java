@@ -1,22 +1,23 @@
 package fr.fges.action;
 
+import fr.fges.businesslogic.RecommendationService;
 import fr.fges.model.BoardGame;
 import fr.fges.service.GameService;
 import fr.fges.ui.UserInput;
 
 import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 public class RecommendGameAction implements MenuAction {
 
     private final GameService service;
     private final UserInput input;
-    private final Random random = new Random();
+    private final RecommendationService recommendationService;
 
     public RecommendGameAction(GameService service, UserInput input) {
         this.service = service;
         this.input = input;
+        this.recommendationService = new RecommendationService();
     }
 
     @Override
@@ -30,21 +31,17 @@ public class RecommendGameAction implements MenuAction {
 
         int playerCount = input.getIntAtLeast("How many players?", 1);
 
-        List<BoardGame> compatibleGames = allGames.stream()
-                .filter(game -> playerCount >= game.getMinPlayers() &&
-                        playerCount <= game.getMaxPlayers())
-                .collect(Collectors.toList());
+        Optional<BoardGame> recommended = recommendationService.recommend(allGames, playerCount);
 
-        if (compatibleGames.isEmpty()) {
+        if (recommended.isEmpty()) {
             System.out.println("No games available for " + playerCount + " players.");
             return;
         }
 
-        BoardGame recommendedGame = compatibleGames.get(random.nextInt(compatibleGames.size()));
-
-        System.out.println("Recommended game: \"" + recommendedGame.getTitle() +
-                "\" (" + recommendedGame.getMinPlayers() + "-" +
-                recommendedGame.getMaxPlayers() + " players, " +
-                recommendedGame.getCategory() + ")");
+        BoardGame game = recommended.get();
+        System.out.println("Recommended game: \"" + game.getTitle() +
+                "\" (" + game.getMinPlayers() + "-" +
+                game.getMaxPlayers() + " players, " +
+                game.getCategory() + ")");
     }
 }

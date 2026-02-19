@@ -37,12 +37,8 @@ class CsvStorageTest {
         File file = tempDir.resolve("games.csv").toFile();
         CsvStorage storage = new CsvStorage(file.getAbsolutePath());
 
-        List<BoardGame> games = List.of(
-                new BoardGame("Catan", 3, 4, "Strategy")
-        );
-
         // Act
-        storage.save(games);
+        storage.save(List.of(new BoardGame("Catan", 3, 4, "Strategy")));
 
         // Assert
         assertTrue(file.exists());
@@ -54,20 +50,17 @@ class CsvStorageTest {
         // Arrange
         File file = tempDir.resolve("games.csv").toFile();
         CsvStorage storage = new CsvStorage(file.getAbsolutePath());
-
-        List<BoardGame> gamesToSave = List.of(
+        storage.save(List.of(
                 new BoardGame("Catan", 3, 4, "Strategy"),
                 new BoardGame("Uno", 2, 10, "Card game")
-        );
-
-        storage.save(gamesToSave);
+        ));
 
         // Act
-        List<BoardGame> loadedGames = storage.load();
+        List<BoardGame> loaded = storage.load();
 
         // Assert
-        assertEquals(2, loadedGames.size());
-        assertEquals("Catan", loadedGames.get(0).getTitle());
-        assertEquals("Uno", loadedGames.get(1).getTitle());
+        assertEquals(2, loaded.size());
+        assertEquals("Catan", loaded.get(0).getTitle());
+        assertEquals("Uno", loaded.get(1).getTitle());
     }
 }

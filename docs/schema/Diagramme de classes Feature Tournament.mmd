@@ -1,0 +1,304 @@
+classDiagram
+%% ========================================
+%% PACKAGE UI
+%% ========================================
+
+    namespace UI {
+        class Main {
+            +main(args: String[]) void
+        }
+
+        class Menu {
+            -UserInput input
+            -Map~Integer, MenuAction~ actions
+            -DayPolicy policy
+            +Menu(input: UserInput, actions: Map, policy: DayPolicy)
+            +run() void
+            -displayMenu() void
+            -executeAction(choice: int) void
+        }
+
+        class UserInput {
+            -Scanner scanner
+            +getIntBetween(prompt: String, min: int, max: int) int
+            +readString(prompt: String) String
+            +readInt() int
+        }
+
+        class GamePrinter {
+            +printGames(games: List~BoardGame~) void
+            +printGame(game: BoardGame) void
+        }
+
+        class MenuAction {
+            <<interface>>
+            +execute() void
+        }
+
+        class TournamentAction {
+            -TournamentService tournamentService
+            -UserInput input
+            -GamePrinter printer
+            +execute() void
+        }
+
+        class MatchInputView {
+            -UserInput input
+            +askWinner(player1: Player, player2: Player) int
+            -displayMatchInfo(player1: Player, player2: Player) void
+        }
+
+        class AddGameAction {
+            -GameService service
+            -UserInput input
+            -ActionHistory history
+            +execute() void
+        }
+
+        class RemoveGameAction {
+            -GameService service
+            -UserInput input
+            -ActionHistory history
+            +execute() void
+        }
+
+        class ListGamesAction {
+            -GameService service
+            -GamePrinter printer
+            +execute() void
+        }
+
+        class ExitAction {
+            +execute() void
+        }
+    }
+
+%% ========================================
+%% PACKAGE Business Logic
+%% ========================================
+
+    namespace BusinessLogic {
+        class GameService {
+            -StorageStrategy storage
+            -List~BoardGame~ games
+            +GameService(storage: StorageStrategy)
+            +findGamesByPlayers(playerCount: int) List~BoardGame~
+            +gameExists(title: String) boolean
+            +addGame(game: BoardGame) void
+            +removeGame(game: BoardGame) void
+            +getAllGames() List~BoardGame~
+            -loadFromStorage() void
+            -saveToStorage() void
+        }
+
+        class TournamentService {
+            -GameService gameService
+            +TournamentService(gameService: GameService)
+            +startTournament(game: BoardGame, players: List~Player~, strategy: TournamentStrategy) void
+            +getTwoPlayerGames() List~BoardGame~
+            -validateTournament(game: BoardGame, players: List~Player~) void
+        }
+
+        class Tournament {
+            -BoardGame game
+            -List~Player~ players
+            -List~Match~ matches
+            -List~RankingEntry~ ranking
+            -TournamentStrategy strategy
+            +Tournament(game: BoardGame, players: List~Player~, strategy: TournamentStrategy)
+            +play() void
+            +computeRanking() void
+            +getRanking() List~RankingEntry~
+        }
+
+        class Match {
+            -Player player1
+            -Player player2
+            -Player winner
+            +Match(player1: Player, player2: Player)
+            +setWinner(player: Player) void
+            +getPlayer1() Player
+            +getPlayer2() Player
+            +getWinner() Player
+        }
+
+        class Player {
+            -String name
+            -int points
+            -int wins
+            +Player(name: String)
+            +addWin() void
+            +addLoss() void
+            +getName() String
+            +getPoints() int
+            +getWins() int
+        }
+
+        class TournamentStrategy {
+            <<interface>>
+            +generateMatches(players: List~Player~) List~Match~
+        }
+
+        class RoundRobinStrategy {
+            +generateMatches(players: List~Player~) List~Match~
+        }
+
+        class KingOfTheHillStrategy {
+            +generateMatches(players: List~Player~) List~Match~
+        }
+
+        class RankingEntry {
+            -Player player
+            -int points
+            -int wins
+            +RankingEntry(player: Player)
+            +getPlayer() Player
+            +getPoints() int
+            +getWins() int
+        }
+
+        class ActionHistory {
+            -Stack~UndoableAction~ history
+            +push(action: UndoableAction) void
+            +undo() void
+            +isEmpty() boolean
+        }
+
+        class DayPolicy {
+            <<interface>>
+            +isWeekend() boolean
+        }
+
+        class SystemDayPolicy {
+            +isWeekend() boolean
+        }
+    }
+
+%% ========================================
+%% PACKAGE Data
+%% ========================================
+
+    namespace Data {
+        class BoardGame {
+            -String title
+            -int minPlayers
+            -int maxPlayers
+            -String category
+            +BoardGame()
+            +BoardGame(title: String, minPlayers: int, maxPlayers: int, category: String)
+            +getTitle() String
+            +getMinPlayers() int
+            +getMaxPlayers() int
+            +getCategory() String
+            +toString() String
+            +equals(obj: Object) boolean
+            +hashCode() int
+        }
+
+        class StorageStrategy {
+            <<interface>>
+            +load() List~BoardGame~
+            +save(games: List~BoardGame~) void
+        }
+
+        class JsonStorage {
+            -String filename
+            +JsonStorage(filename: String)
+            +load() List~BoardGame~
+            +save(games: List~BoardGame~) void
+        }
+
+        class CsvStorage {
+            -String filename
+            +CsvStorage(filename: String)
+            +load() List~BoardGame~
+            +save(games: List~BoardGame~) void
+        }
+    }
+
+%% ========================================
+%% RELATIONSHIPS - UI Package
+%% ========================================
+
+    Main ..> Menu : creates
+    Main ..> UserInput : creates
+    Main ..> GamePrinter : creates
+    Main ..> GameService : creates
+    Main ..> TournamentService : creates
+    Main ..> ActionHistory : creates
+    Main ..> DayPolicy : creates
+    Main ..> MenuAction : creates
+
+    Menu --> UserInput : uses
+    Menu --> MenuAction : contains
+    Menu --> DayPolicy : uses
+
+    MenuAction <|.. TournamentAction : implements
+    MenuAction <|.. AddGameAction : implements
+    MenuAction <|.. RemoveGameAction : implements
+    MenuAction <|.. ListGamesAction : implements
+    MenuAction <|.. ExitAction : implements
+
+    TournamentAction --> TournamentService : uses
+    TournamentAction --> UserInput : uses
+    TournamentAction --> GamePrinter : uses
+
+    AddGameAction --> GameService : uses
+    AddGameAction --> UserInput : uses
+    AddGameAction --> ActionHistory : uses
+
+    RemoveGameAction --> GameService : uses
+    RemoveGameAction --> UserInput : uses
+    RemoveGameAction --> ActionHistory : uses
+
+    ListGamesAction --> GameService : uses
+    ListGamesAction --> GamePrinter : uses
+
+    MatchInputView --> UserInput : uses
+    MatchInputView --> Player : displays
+
+    GamePrinter --> BoardGame : displays
+
+%% ========================================
+%% RELATIONSHIPS - Business Logic Package
+%% ========================================
+
+    GameService --> StorageStrategy : uses
+    GameService --> BoardGame : manages
+
+    TournamentService --> GameService : uses
+    TournamentService --> Tournament : creates
+    TournamentService --> TournamentStrategy : validates
+    TournamentService --> Player : creates
+
+    Tournament --> BoardGame : uses
+    Tournament --> Player : involves
+    Tournament --> Match : contains
+    Tournament --> TournamentStrategy : uses
+    Tournament --> RankingEntry : builds
+
+    Match --> Player : contains
+
+    RankingEntry --> Player : references
+
+    TournamentStrategy <|.. RoundRobinStrategy : implements
+    TournamentStrategy <|.. KingOfTheHillStrategy : implements
+
+    DayPolicy <|.. SystemDayPolicy : implements
+
+%% ========================================
+%% RELATIONSHIPS - Data Package
+%% ========================================
+
+    StorageStrategy <|.. JsonStorage : implements
+    StorageStrategy <|.. CsvStorage : implements
+
+    JsonStorage ..> BoardGame : loads/saves
+    CsvStorage ..> BoardGame : loads/saves
+
+%% ========================================
+%% CROSS-PACKAGE RELATIONSHIPS
+%% ========================================
+
+    TournamentAction ..> Tournament : creates via service
+    MatchInputView ..> Match : displays

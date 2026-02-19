@@ -1,6 +1,8 @@
-package fr.fges.action;
+package fr.fges.businesslogic;
 
-import fr.fges.history.ActionHistory;
+import fr.fges.action.MenuAction;
+import fr.fges.model.BoardGame;
+
 
 public class UndoLastAction implements MenuAction {
 
@@ -17,7 +19,7 @@ public class UndoLastAction implements MenuAction {
             return;
         }
 
-        UndoableAction last = history.pop();
+        UndoableAction<BoardGame> last = history.pop();
         last.undo();
     }
 }

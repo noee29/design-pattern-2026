@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.*;
 
 class GamePrinterTest {
 
@@ -23,9 +23,7 @@ class GamePrinterTest {
     void printGames_shouldNotCrashWithGames() {
         // Arrange
         GamePrinter printer = new GamePrinter();
-        List<BoardGame> games = List.of(
-                new BoardGame("Catan", 3, 4, "Strategy")
-        );
+        List<BoardGame> games = List.of(new BoardGame("Catan", 3, 4, "Strategy"));
 
         // Act & Assert
         assertDoesNotThrow(() -> printer.printGames(games));

@@ -27,13 +27,8 @@ public class GameService {
 
     public List<BoardGame> findGamesByPlayers(int playerCount) {
         return games.stream()
-                .filter(g ->
-                        playerCount >= g.getMinPlayers() &&
-                                playerCount <= g.getMaxPlayers()
-                )
-                .sorted((a, b) ->
-                        a.getTitle().compareToIgnoreCase(b.getTitle())
-                )
+                .filter(g -> playerCount >= g.getMinPlayers() && playerCount <= g.getMaxPlayers())
+                .sorted((a, b) -> a.getTitle().compareToIgnoreCase(b.getTitle()))
                 .toList();
     }
 
@@ -46,6 +41,7 @@ public class GameService {
         games.add(game);
         saveToStorage();
     }
+
     public void removeGame(BoardGame game) {
         games.remove(game);
         saveToStorage();

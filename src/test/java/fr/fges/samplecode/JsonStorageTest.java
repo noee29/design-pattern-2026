@@ -30,10 +30,8 @@ class JsonStorageTest {
         File file = File.createTempFile("games", ".json");
         StorageStrategy storage = new JsonStorage(file.getAbsolutePath());
 
-        BoardGame game = new BoardGame("Catan", 3, 4, "Strategy");
-
         // Act
-        storage.save(List.of(game));
+        storage.save(List.of(new BoardGame("Catan", 3, 4, "Strategy")));
         List<BoardGame> loaded = storage.load();
 
         // Assert

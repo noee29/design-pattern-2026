@@ -1,8 +1,8 @@
 package fr.fges.samplecode;
 
 import fr.fges.action.AddGameAction;
-import fr.fges.action.UndoableAction;
-import fr.fges.history.ActionHistory;
+import fr.fges.businesslogic.ActionHistory;
+import fr.fges.businesslogic.UndoableAction;
 import fr.fges.model.BoardGame;
 import fr.fges.service.GameService;
 import fr.fges.ui.UserInput;
@@ -33,11 +33,11 @@ class ActionHistoryTest {
         when(input.getInt("Maximum Players: ")).thenReturn(4);
         when(input.getString("Category (e.g., fantasy, strategy): ")).thenReturn("strategy");
 
-        UndoableAction action = new AddGameAction(service, input, history);
+        UndoableAction<BoardGame> action = new AddGameAction(service, input, history);
 
         // Act
         action.execute();
-        UndoableAction popped = history.pop();
+        UndoableAction<BoardGame> popped = history.pop();
 
         // Assert
         assertEquals(action, popped);
@@ -46,11 +46,16 @@ class ActionHistoryTest {
 
     @Test
     void isEmpty_shouldReturnTrueWhenEmpty() {
-        assertTrue(history.isEmpty());
+        // Act
+        boolean result = history.isEmpty();
+
+        // Assert
+        assertTrue(result);
     }
 
     @Test
     void pop_shouldThrowExceptionWhenEmpty() {
-        assertThrows(Exception.class, history::pop); // Stack pop throws EmptyStackException
+        // Act & Assert
+        assertThrows(Exception.class, history::pop);
     }
 }

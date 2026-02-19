@@ -1,13 +1,14 @@
 package fr.fges.action;
 
+import fr.fges.businesslogic.ActionHistory;
+import fr.fges.businesslogic.UndoableAction;
 import fr.fges.model.BoardGame;
 import fr.fges.service.GameService;
 import fr.fges.ui.UserInput;
-import fr.fges.history.ActionHistory;
 
 import java.util.List;
 
-public class RemoveGameAction implements UndoableAction {
+public class RemoveGameAction implements UndoableAction<BoardGame> {
 
     private final GameService service;
     private final UserInput input;

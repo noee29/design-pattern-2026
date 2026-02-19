@@ -30,7 +30,6 @@ public class UserInput {
         }
     }
 
-
     public int getIntAtLeast(String prompt, int min) {
         while (true) {
             int value = getInt(prompt + " (at least " + min + "): ");

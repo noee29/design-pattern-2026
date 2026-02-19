@@ -1,18 +1,18 @@
-package fr.fges.history;
+package fr.fges.businesslogic;
 
-import fr.fges.action.UndoableAction;
+import fr.fges.model.BoardGame;
 
 import java.util.Stack;
 
 public class ActionHistory {
 
-    private final Stack<UndoableAction> stack = new Stack<>();
+    private final Stack<UndoableAction<BoardGame>> stack = new Stack<>();
 
-    public void push(UndoableAction action) {
+    public void push(UndoableAction<BoardGame> action) {
         stack.push(action);
     }
 
-    public UndoableAction pop() {
+    public UndoableAction<BoardGame> pop() {
         return stack.pop();
     }
 

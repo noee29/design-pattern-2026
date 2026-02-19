@@ -5,8 +5,10 @@ import fr.fges.service.GameService;
 import fr.fges.storage.StorageStrategy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import java.io.IOException;
 import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -46,7 +48,7 @@ class GameServiceTest {
 
         // Assert
         assertFalse(service.gameExists("Catan"));
-        verify(storage, times(2)).save(anyList()); // add + remove
+        verify(storage, times(2)).save(anyList());
     }
 
     @Test
@@ -60,6 +62,6 @@ class GameServiceTest {
         games.clear();
 
         // Assert
-        assertEquals(1, service.getAllGames().size()); // original list remains
+        assertEquals(1, service.getAllGames().size());
     }
 }

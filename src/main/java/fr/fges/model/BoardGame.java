@@ -18,21 +18,10 @@ public class BoardGame {
         this.category = category;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public int getMinPlayers() {
-        return minPlayers;
-    }
-
-    public int getMaxPlayers() {
-        return maxPlayers;
-    }
-
-    public String getCategory() {
-        return category;
-    }
+    public String getTitle() { return title; }
+    public int getMinPlayers() { return minPlayers; }
+    public int getMaxPlayers() { return maxPlayers; }
+    public String getCategory() { return category; }
 
     @Override
     public String toString() {

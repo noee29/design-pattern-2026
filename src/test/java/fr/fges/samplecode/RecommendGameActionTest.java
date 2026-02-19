@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 class RecommendGameActionTest {
 
@@ -25,7 +26,7 @@ class RecommendGameActionTest {
     }
 
     @Test
-    void execute_shouldRecommendGame() {
+    void execute_shouldRecommendGameWithoutException() {
         // Arrange
         when(service.getAllGames()).thenReturn(List.of(
                 new BoardGame("Catan", 3, 4, "strategy"),
@@ -33,9 +34,28 @@ class RecommendGameActionTest {
         ));
         when(input.getIntAtLeast("How many players?", 1)).thenReturn(4);
 
-        // Act
-        action.execute();
+        // Act & Assert
+        assertDoesNotThrow(action::execute);
+    }
 
-        // Assert passes if no exception thrown
+    @Test
+    void execute_whenNoGames_shouldNotThrow() {
+        // Arrange
+        when(service.getAllGames()).thenReturn(List.of());
+
+        // Act & Assert
+        assertDoesNotThrow(action::execute);
+    }
+
+    @Test
+    void execute_whenNoCompatibleGame_shouldNotThrow() {
+        // Arrange
+        when(service.getAllGames()).thenReturn(List.of(
+                new BoardGame("Catan", 3, 4, "strategy")
+        ));
+        when(input.getIntAtLeast("How many players?", 1)).thenReturn(10);
+
+        // Act & Assert
+        assertDoesNotThrow(action::execute);
     }
 }

@@ -1,6 +1,6 @@
 package fr.fges.samplecode;
 
-import fr.fges.action.WeekendSummaryAction;
+import fr.fges.policy.WeekendSummaryAction;
 import fr.fges.model.BoardGame;
 import fr.fges.service.GameService;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 class WeekendSummaryActionTest {
 
@@ -22,7 +23,7 @@ class WeekendSummaryActionTest {
     }
 
     @Test
-    void execute_shouldPrintThreeGamesOrLess() {
+    void execute_shouldPrintThreeRandomGames() {
         // Arrange
         when(service.getAllGames()).thenReturn(List.of(
                 new BoardGame("Catan", 3, 4, "strategy"),
@@ -30,9 +31,16 @@ class WeekendSummaryActionTest {
                 new BoardGame("Bingo", 2, 6, "family")
         ));
 
-        // Act
-        action.execute();
+        // Act & Assert
+        assertDoesNotThrow(action::execute);
+    }
 
-        // Assert passes if no exception thrown
+    @Test
+    void execute_whenEmptyCollection_shouldNotThrow() {
+        // Arrange
+        when(service.getAllGames()).thenReturn(List.of());
+
+        // Act & Assert
+        assertDoesNotThrow(action::execute);
     }
 }
