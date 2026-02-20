@@ -2,6 +2,7 @@ package fr.fges.samplecode;
 
 import fr.fges.model.BoardGame;
 import fr.fges.ui.GamePrinter;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -10,20 +11,39 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GamePrinterTest {
 
-    @Test
-    void printGames_shouldNotCrashWithEmptyList() {
-        // Arrange
-        GamePrinter printer = new GamePrinter();
+    private GamePrinter printer;
 
-        // Act & Assert
-        assertDoesNotThrow(() -> printer.printGames(List.of()));
+    @BeforeEach
+    void setUp() {
+        printer = new GamePrinter();
     }
 
     @Test
-    void printGames_shouldNotCrashWithGames() {
+    void printGames_shouldNotThrow_whenListIsEmpty() {
         // Arrange
-        GamePrinter printer = new GamePrinter();
+        List<BoardGame> games = List.of();
+
+        // Act & Assert
+        assertDoesNotThrow(() -> printer.printGames(games));
+    }
+
+    @Test
+    void printGames_shouldNotThrow_whenListHasOneGame() {
+        // Arrange
         List<BoardGame> games = List.of(new BoardGame("Catan", 3, 4, "Strategy"));
+
+        // Act & Assert
+        assertDoesNotThrow(() -> printer.printGames(games));
+    }
+
+    @Test
+    void printGames_shouldNotThrow_whenListHasMultipleGames() {
+        // Arrange
+        List<BoardGame> games = List.of(
+                new BoardGame("Catan", 3, 4, "Strategy"),
+                new BoardGame("Pandemic", 2, 4, "Coop"),
+                new BoardGame("7 Wonders", 3, 7, "Strategy")
+        );
 
         // Act & Assert
         assertDoesNotThrow(() -> printer.printGames(games));

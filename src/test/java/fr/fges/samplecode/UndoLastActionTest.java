@@ -9,8 +9,8 @@ import fr.fges.ui.UserInput;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class UndoLastActionTest {
 
@@ -30,7 +30,18 @@ class UndoLastActionTest {
     }
 
     @Test
-    void execute_shouldUndoLastAction() {
+    void getLabel_shouldReturnCorrectLabel() {
+        // Arrange — action déjà initialisée
+
+        // Act
+        String label = undoAction.getLabel();
+
+        // Assert
+        assertEquals("Undo Last Action", label);
+    }
+
+    @Test
+    void execute_shouldCallUndo_onLastAction() {
         // Arrange
         when(input.getString("Title: ")).thenReturn("Catan");
         when(input.getInt("Minimum Players: ")).thenReturn(3);
@@ -43,12 +54,27 @@ class UndoLastActionTest {
 
         // Assert
         verify(service, times(1)).removeGame(any(BoardGame.class));
+    }
+
+    @Test
+    void execute_shouldEmptyHistory_afterUndo() {
+        // Arrange
+        when(input.getString("Title: ")).thenReturn("Catan");
+        when(input.getInt("Minimum Players: ")).thenReturn(3);
+        when(input.getInt("Maximum Players: ")).thenReturn(4);
+        when(input.getString("Category (e.g., fantasy, strategy): ")).thenReturn("strategy");
+        addAction.execute();
+
+        // Act
+        undoAction.execute();
+
+        // Assert
         assertTrue(history.isEmpty());
     }
 
     @Test
-    void execute_whenHistoryEmpty_shouldPrintNothingToUndo() {
-        // Act & Assert — aucune exception ne doit être levée
+    void execute_shouldNotThrow_whenHistoryIsEmpty() {
+        // Act & Assert
         assertDoesNotThrow(undoAction::execute);
     }
 }

@@ -1,28 +1,66 @@
 package fr.fges.samplecode;
 
 import fr.fges.action.ListGamesAction;
+import fr.fges.model.BoardGame;
 import fr.fges.service.GameService;
 import fr.fges.ui.GamePrinter;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class ListGamesActionTest {
 
+    private GameService service;
+    private GamePrinter printer;
+    private ListGamesAction action;
+
+    @BeforeEach
+    void setUp() {
+        service = mock(GameService.class);
+        printer = mock(GamePrinter.class);
+        action = new ListGamesAction(service, printer);
+    }
+
     @Test
-    void execute_shouldDelegatePrintToGamePrinter() {
+    void getLabel_shouldReturnCorrectLabel() {
+        // Act
+        String label = action.getLabel();
+
+        // Assert
+        assertEquals("List All Board Games", label);
+    }
+
+    @Test
+    void execute_shouldDelegatePrintingToGamePrinter() {
         // Arrange
-        GameService service = mock(GameService.class);
-        GamePrinter printer = mock(GamePrinter.class);
-        when(service.getAllGames()).thenReturn(List.of());
-        ListGamesAction action = new ListGamesAction(service, printer);
+        when(service.getAllGames()).thenReturn(List.of(
+                new BoardGame("Catan", 3, 4, "strategy")
+        ));
 
         // Act
         action.execute();
 
         // Assert
-        verify(printer).printGames(anyList());
+        verify(printer, times(1)).printGames(anyList());
+    }
+
+    @Test
+    void execute_shouldPassAllGamesToPrinter() {
+        // Arrange
+        List<BoardGame> games = List.of(
+                new BoardGame("Catan", 3, 4, "strategy"),
+                new BoardGame("Pandemic", 2, 4, "coop")
+        );
+        when(service.getAllGames()).thenReturn(games);
+
+        // Act
+        action.execute();
+
+        // Assert
+        verify(printer).printGames(games);
     }
 }

@@ -24,15 +24,15 @@ class CsvStorageTest {
         CsvStorage storage = new CsvStorage(file.getAbsolutePath());
 
         // Act
-        List<BoardGame> games = storage.load();
+        List<BoardGame> result = storage.load();
 
         // Assert
-        assertNotNull(games);
-        assertTrue(games.isEmpty());
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
     }
 
     @Test
-    void save_shouldCreateCsvFile() throws IOException {
+    void save_shouldCreateFile() throws IOException {
         // Arrange
         File file = tempDir.resolve("games.csv").toFile();
         CsvStorage storage = new CsvStorage(file.getAbsolutePath());
@@ -46,7 +46,7 @@ class CsvStorageTest {
     }
 
     @Test
-    void load_shouldReadGamesPreviouslySaved() throws IOException {
+    void saveAndLoad_shouldPersistGames() throws IOException {
         // Arrange
         File file = tempDir.resolve("games.csv").toFile();
         CsvStorage storage = new CsvStorage(file.getAbsolutePath());
@@ -62,5 +62,20 @@ class CsvStorageTest {
         assertEquals(2, loaded.size());
         assertEquals("Catan", loaded.get(0).getTitle());
         assertEquals("Uno", loaded.get(1).getTitle());
+    }
+
+    @Test
+    void saveAndLoad_shouldPreservePlayerCounts() throws IOException {
+        // Arrange
+        File file = tempDir.resolve("games.csv").toFile();
+        CsvStorage storage = new CsvStorage(file.getAbsolutePath());
+        storage.save(List.of(new BoardGame("Catan", 3, 4, "Strategy")));
+
+        // Act
+        List<BoardGame> loaded = storage.load();
+
+        // Assert
+        assertEquals(3, loaded.get(0).getMinPlayers());
+        assertEquals(4, loaded.get(0).getMaxPlayers());
     }
 }

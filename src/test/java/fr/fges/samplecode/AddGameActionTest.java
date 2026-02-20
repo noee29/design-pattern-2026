@@ -8,8 +8,8 @@ import fr.fges.ui.UserInput;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class AddGameActionTest {
 
@@ -27,7 +27,16 @@ class AddGameActionTest {
     }
 
     @Test
-    void execute_shouldAddGameAndPushToHistory() {
+    void getLabel_shouldReturnCorrectLabel() {
+        // Act
+        String label = action.getLabel();
+
+        // Assert
+        assertEquals("Add Board Game", label);
+    }
+
+    @Test
+    void execute_shouldCallAddGameOnService() {
         // Arrange
         when(input.getString("Title: ")).thenReturn("Catan");
         when(input.getInt("Minimum Players: ")).thenReturn(3);
@@ -39,11 +48,10 @@ class AddGameActionTest {
 
         // Assert
         verify(service, times(1)).addGame(any(BoardGame.class));
-        assertEquals(1, history.size());
     }
 
     @Test
-    void undo_shouldRemoveLastAddedGame() {
+    void execute_shouldPushActionToHistory() {
         // Arrange
         when(input.getString("Title: ")).thenReturn("Catan");
         when(input.getInt("Minimum Players: ")).thenReturn(3);
@@ -52,9 +60,40 @@ class AddGameActionTest {
 
         // Act
         action.execute();
+
+        // Assert
+        assertEquals(1, history.size());
+    }
+
+    @Test
+    void undo_shouldCallRemoveGameOnService() {
+        // Arrange
+        when(input.getString("Title: ")).thenReturn("Catan");
+        when(input.getInt("Minimum Players: ")).thenReturn(3);
+        when(input.getInt("Maximum Players: ")).thenReturn(4);
+        when(input.getString("Category (e.g., fantasy, strategy): ")).thenReturn("strategy");
+        action.execute();
+
+        // Act
         action.undo();
 
         // Assert
         verify(service, times(1)).removeGame(any(BoardGame.class));
+    }
+
+    @Test
+    void undo_shouldRemoveTheCorrectGame() {
+        // Arrange
+        when(input.getString("Title: ")).thenReturn("Catan");
+        when(input.getInt("Minimum Players: ")).thenReturn(3);
+        when(input.getInt("Maximum Players: ")).thenReturn(4);
+        when(input.getString("Category (e.g., fantasy, strategy): ")).thenReturn("strategy");
+        action.execute();
+
+        // Act
+        action.undo();
+
+        // Assert
+        verify(service).removeGame(argThat(g -> g.getTitle().equals("Catan")));
     }
 }

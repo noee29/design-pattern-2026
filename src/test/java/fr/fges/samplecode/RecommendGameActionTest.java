@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class RecommendGameActionTest {
 
@@ -26,7 +26,16 @@ class RecommendGameActionTest {
     }
 
     @Test
-    void execute_shouldRecommendGameWithoutException() {
+    void getLabel_shouldReturnCorrectLabel() {
+        // Act
+        String label = action.getLabel();
+
+        // Assert
+        assertEquals("Recommend Game", label);
+    }
+
+    @Test
+    void execute_shouldNotThrow_whenCompatibleGameExists() {
         // Arrange
         when(service.getAllGames()).thenReturn(List.of(
                 new BoardGame("Catan", 3, 4, "strategy"),
@@ -39,7 +48,7 @@ class RecommendGameActionTest {
     }
 
     @Test
-    void execute_whenNoGames_shouldNotThrow() {
+    void execute_shouldNotThrow_whenCollectionIsEmpty() {
         // Arrange
         when(service.getAllGames()).thenReturn(List.of());
 
@@ -48,12 +57,12 @@ class RecommendGameActionTest {
     }
 
     @Test
-    void execute_whenNoCompatibleGame_shouldNotThrow() {
+    void execute_shouldNotThrow_whenNoCompatibleGame() {
         // Arrange
         when(service.getAllGames()).thenReturn(List.of(
-                new BoardGame("Catan", 3, 4, "strategy")
+                new BoardGame("SoloGame", 1, 1, "solo")
         ));
-        when(input.getIntAtLeast("How many players?", 1)).thenReturn(10);
+        when(input.getIntAtLeast("How many players?", 1)).thenReturn(5);
 
         // Act & Assert
         assertDoesNotThrow(action::execute);

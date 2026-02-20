@@ -8,6 +8,18 @@ import static org.junit.jupiter.api.Assertions.*;
 class ExitActionTest {
 
     @Test
+    void getLabel_shouldReturnCorrectLabel() {
+        // Arrange
+        ExitAction action = new ExitAction();
+
+        // Act
+        String label = action.getLabel();
+
+        // Assert
+        assertEquals("Exit", label);
+    }
+
+    @Test
     void execute_shouldCallSystemExit() {
         // Arrange
         ExitAction action = new ExitAction();

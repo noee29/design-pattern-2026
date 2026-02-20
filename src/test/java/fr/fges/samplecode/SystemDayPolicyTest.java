@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class SystemDayPolicyTest {
 
     @Test
-    void isWeekend_shouldReturnBooleanWithoutCrash() {
+    void isWeekend_shouldReturnBoolean_withoutException() {
         // Arrange
         DayPolicy policy = new SystemDayPolicy();
 
@@ -17,6 +17,6 @@ class SystemDayPolicyTest {
         boolean result = policy.isWeekend();
 
         // Assert
-        assertNotNull(result);
+        assertTrue(result || !result);
     }
 }

@@ -9,8 +9,8 @@ import fr.fges.ui.UserInput;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class ActionHistoryTest {
 
@@ -26,26 +26,7 @@ class ActionHistoryTest {
     }
 
     @Test
-    void pushAndPop_shouldWorkCorrectly() {
-        // Arrange
-        when(input.getString("Title: ")).thenReturn("Catan");
-        when(input.getInt("Minimum Players: ")).thenReturn(3);
-        when(input.getInt("Maximum Players: ")).thenReturn(4);
-        when(input.getString("Category (e.g., fantasy, strategy): ")).thenReturn("strategy");
-
-        UndoableAction<BoardGame> action = new AddGameAction(service, input, history);
-
-        // Act
-        action.execute();
-        UndoableAction<BoardGame> popped = history.pop();
-
-        // Assert
-        assertEquals(action, popped);
-        assertTrue(history.isEmpty());
-    }
-
-    @Test
-    void isEmpty_shouldReturnTrueWhenEmpty() {
+    void isEmpty_shouldReturnTrue_whenHistoryIsEmpty() {
         // Act
         boolean result = history.isEmpty();
 
@@ -54,7 +35,59 @@ class ActionHistoryTest {
     }
 
     @Test
-    void pop_shouldThrowExceptionWhenEmpty() {
+    void isEmpty_shouldReturnFalse_afterPush() {
+        // Arrange
+        when(input.getString("Title: ")).thenReturn("Catan");
+        when(input.getInt("Minimum Players: ")).thenReturn(3);
+        when(input.getInt("Maximum Players: ")).thenReturn(4);
+        when(input.getString("Category (e.g., fantasy, strategy): ")).thenReturn("strategy");
+        UndoableAction<BoardGame> action = new AddGameAction(service, input, history);
+        action.execute();
+
+        // Act
+        boolean result = history.isEmpty();
+
+        // Assert
+        assertFalse(result);
+    }
+
+    @Test
+    void size_shouldReturnCorrectCount() {
+        // Arrange
+        when(input.getString("Title: ")).thenReturn("Catan");
+        when(input.getInt("Minimum Players: ")).thenReturn(3);
+        when(input.getInt("Maximum Players: ")).thenReturn(4);
+        when(input.getString("Category (e.g., fantasy, strategy): ")).thenReturn("strategy");
+        UndoableAction<BoardGame> action = new AddGameAction(service, input, history);
+        action.execute();
+
+        // Act
+        int size = history.size();
+
+        // Assert
+        assertEquals(1, size);
+    }
+
+    @Test
+    void pop_shouldReturnLastPushedAction() {
+        // Arrange
+        when(input.getString("Title: ")).thenReturn("Catan");
+        when(input.getInt("Minimum Players: ")).thenReturn(3);
+        when(input.getInt("Maximum Players: ")).thenReturn(4);
+        when(input.getString("Category (e.g., fantasy, strategy): ")).thenReturn("strategy");
+        UndoableAction<BoardGame> action = new AddGameAction(service, input, history);
+        action.execute();
+
+        // Act
+        UndoableAction<BoardGame> popped = history.pop();
+
+        // Assert
+        assertEquals(action, popped);
+        assertTrue(history.isEmpty());
+    }
+
+    @Test
+    void pop_shouldThrowException_whenHistoryIsEmpty() {
         // Act & Assert
         assertThrows(Exception.class, history::pop);
     }

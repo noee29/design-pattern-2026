@@ -1,0 +1,396 @@
+flowchart TB
+
+subgraph PKG_ACTION["package: action"]
+direction TB
+
+MenuAction["&lt;&lt;interface&gt;&gt; MenuAction
+        (action)
+──────────────────
++execute() void
++getLabel() String"]
+
+AddGameAction["AddGameAction
+(action)
+──────────────────
+-service : GameService
+-input : UserInput
+-history : ActionHistory
+-lastAdded : BoardGame
+──────────────────
++AddGameAction(service, input, history)
++execute() void
++getLabel() String
++undo() void"]
+
+RemoveGameAction["RemoveGameAction
+(action)
+──────────────────
+-service : GameService
+-input : UserInput
+-history : ActionHistory
+-lastRemoved : BoardGame
+──────────────────
++RemoveGameAction(service, input, history)
++execute() void
++getLabel() String
++undo() void"]
+
+ListGamesAction["ListGamesAction
+(action)
+──────────────────
+-service : GameService
+-printer : GamePrinter
+──────────────────
++ListGamesAction(service, printer)
++execute() void
++getLabel() String"]
+
+RecommendGameAction["RecommendGameAction
+(action)
+──────────────────
+-service : GameService
+-input : UserInput
+-recommendationService : RecommendationService
+──────────────────
++RecommendGameAction(service, input)
++execute() void
++getLabel() String"]
+
+FindGamesByPlayersAction["FindGamesByPlayersAction
+(action)
+──────────────────
+-service : GameService
+-input : UserInput
+──────────────────
++FindGamesByPlayersAction(service, input)
++execute() void
++getLabel() String"]
+
+TournamentAction["TournamentAction
+(action)
+──────────────────
+-MIN_PLAYERS : int
+-MAX_PLAYERS : int
+-service : GameService
+-input : UserInput
+──────────────────
++TournamentAction(service, input)
++execute() void
++getLabel() String
+-selectGame() BoardGame
+-getTwoPlayerGames() List
+-collectPlayers() List
+-selectStrategy() TournamentStrategy"]
+
+ExitAction["ExitAction
+(action)
+──────────────────
++execute() void
++getLabel() String"]
+end
+
+subgraph PKG_BL["package: businesslogic"]
+direction TB
+
+UndoableAction["&lt;&lt;interface&gt;&gt; UndoableAction
+(businesslogic)
+──────────────────
++execute() void
++getLabel() String
++undo() void"]
+
+ActionHistory["ActionHistory
+(businesslogic)
+──────────────────
+-stack : Stack
+──────────────────
++push(action) void
++pop() UndoableAction
++isEmpty() boolean
++size() int"]
+
+UndoLastAction["UndoLastAction
+(businesslogic)
+──────────────────
+-history : ActionHistory
+──────────────────
++UndoLastAction(history)
++execute() void
++getLabel() String"]
+
+RecommendationService["RecommendationService
+(businesslogic)
+──────────────────
+-random : Random
+──────────────────
++recommend(games, playerCount) Optional"]
+end
+
+subgraph PKG_MODEL["package: model"]
+direction TB
+
+BoardGame["BoardGame
+(model)
+──────────────────
+-title : String
+-minPlayers : int
+-maxPlayers : int
+-category : String
+──────────────────
++BoardGame()
++BoardGame(title, minPlayers, maxPlayers, category)
++getTitle() String
++getMinPlayers() int
++getMaxPlayers() int
++getCategory() String
++equals(obj) boolean
++hashCode() int
++toString() String"]
+end
+
+subgraph PKG_POLICY["package: policy"]
+direction TB
+
+DayPolicy["&lt;&lt;interface&gt;&gt; DayPolicy
+(policy)
+──────────────────
++isWeekend() boolean"]
+
+SystemDayPolicy["SystemDayPolicy
+(policy)
+──────────────────
++isWeekend() boolean"]
+
+WeekendSummaryAction["WeekendSummaryAction
+(policy)
+──────────────────
+-service : GameService
+──────────────────
++WeekendSummaryAction(service)
++execute() void
++getLabel() String"]
+end
+
+subgraph PKG_SERVICE["package: service"]
+direction TB
+
+GameService["GameService
+(service)
+──────────────────
+-storage : StorageStrategy
+-games : List
+──────────────────
++GameService(storage)
++addGame(game) void
++removeGame(game) void
++getAllGames() List
++findGamesByPlayers(playerCount) List
++gameExists(title) boolean
+-loadFromStorage() void
+-saveToStorage() void"]
+end
+
+subgraph PKG_STORAGE["package: storage"]
+direction TB
+
+StorageStrategy["&lt;&lt;interface&gt;&gt; StorageStrategy
+(storage)
+──────────────────
++load() List
++save(games) void"]
+
+JsonStorage["JsonStorage
+(storage)
+──────────────────
+-file : String
+-mapper : ObjectMapper
+──────────────────
++JsonStorage(file)
++load() List
++save(games) void"]
+
+CsvStorage["CsvStorage
+(storage)
+──────────────────
+-file : String
+──────────────────
++CsvStorage(file)
++load() List
++save(games) void"]
+end
+
+subgraph PKG_TOURNAMENT["package: tournament"]
+direction TB
+
+TournamentStrategy["&lt;&lt;interface&gt;&gt; TournamentStrategy
+(tournament)
+──────────────────
++generateMatches(players) List
++getName() String"]
+
+ChampionshipStrategy["ChampionshipStrategy
+(tournament)
+──────────────────
++generateMatches(players) List
++getName() String"]
+
+KingOfHillStrategy["KingOfHillStrategy
+(tournament)
+──────────────────
++generateMatches(players) List
++getName() String"]
+
+Tournament["Tournament
+(tournament)
+──────────────────
+-players : List
+-strategy : TournamentStrategy
+-input : UserInput
+──────────────────
++Tournament(players, strategy, input)
++play() void
+-playWithGeneratedMatches() void
+-playKingOfHill() void
+-playMatch(match, matchNumber, total) Player"]
+
+TournamentResult["TournamentResult
+(tournament)
+──────────────────
+-players : List
+──────────────────
++TournamentResult(players)
++getRankedPlayers() List
++print() void
+-rankingComparator() Comparator"]
+
+Match["Match
+(tournament)
+──────────────────
+-player1 : Player
+-player2 : Player
+──────────────────
++Match(player1, player2)
++getPlayer1() Player
++getPlayer2() Player"]
+
+Player["Player
+(tournament)
+──────────────────
+-name : String
+-points : int
+-wins : int
+──────────────────
++Player(name)
++getName() String
++getPoints() int
++getWins() int
++addWin() void
++addLoss() void
++toString() String"]
+end
+
+subgraph PKG_UI["package: ui"]
+direction TB
+
+Menu["Menu
+(ui)
+──────────────────
+-input : UserInput
+-actions : List
+──────────────────
++Menu(input, actions, policy)
++run() void
+-displayMenu() void
+-executeAction(choice) void"]
+
+GamePrinter["GamePrinter
+(ui)
+──────────────────
++printGames(games) void"]
+
+UserInput["UserInput
+(ui)
+──────────────────
+-scanner : Scanner
+──────────────────
++getString(prompt) String
++getInt(prompt) int
++getIntBetween(prompt, min, max) int
++getIntAtLeast(prompt, min) int"]
+end
+
+%% ══════════════════════════════════════
+%% RELATIONS
+%% ══════════════════════════════════════
+
+%% extends interface
+UndoableAction -->|extends| MenuAction
+
+%% implements
+SystemDayPolicy -.->|implements| DayPolicy
+JsonStorage -.->|implements| StorageStrategy
+CsvStorage -.->|implements| StorageStrategy
+ChampionshipStrategy -.->|implements| TournamentStrategy
+KingOfHillStrategy -.->|implements| TournamentStrategy
+AddGameAction -.->|implements| UndoableAction
+RemoveGameAction -.->|implements| UndoableAction
+ListGamesAction -.->|implements| MenuAction
+RecommendGameAction -.->|implements| MenuAction
+FindGamesByPlayersAction -.->|implements| MenuAction
+TournamentAction -.->|implements| MenuAction
+ExitAction -.->|implements| MenuAction
+UndoLastAction -.->|implements| MenuAction
+WeekendSummaryAction -.->|implements| MenuAction
+
+%% uses / associations
+AddGameAction -->|uses| GameService
+AddGameAction -->|uses| UserInput
+AddGameAction -->|pushes to| ActionHistory
+AddGameAction -->|creates| BoardGame
+
+RemoveGameAction -->|uses| GameService
+RemoveGameAction -->|uses| UserInput
+RemoveGameAction -->|pushes to| ActionHistory
+RemoveGameAction -->|removes| BoardGame
+
+ListGamesAction -->|uses| GameService
+ListGamesAction -->|delegates to| GamePrinter
+
+RecommendGameAction -->|uses| GameService
+RecommendGameAction -->|uses| UserInput
+RecommendGameAction -->|delegates to| RecommendationService
+
+FindGamesByPlayersAction -->|uses| GameService
+FindGamesByPlayersAction -->|uses| UserInput
+
+TournamentAction -->|uses| GameService
+TournamentAction -->|uses| UserInput
+TournamentAction -->|creates| Tournament
+TournamentAction -->|creates| Player
+TournamentAction -->|selects| TournamentStrategy
+
+WeekendSummaryAction -->|uses| GameService
+
+UndoLastAction -->|reads from| ActionHistory
+
+ActionHistory -->|typed with| BoardGame
+
+RecommendationService -->|filters| BoardGame
+
+GameService -->|uses| StorageStrategy
+GameService -->|manages| BoardGame
+
+Menu -->|executes| MenuAction
+Menu -->|uses| UserInput
+
+Tournament -->|uses| TournamentStrategy
+Tournament -->|manages| Player
+Tournament -->|plays| Match
+Tournament -->|uses| UserInput
+Tournament -->|creates| TournamentResult
+
+TournamentResult -->|ranks| Player
+
+Match -->|references| Player
+
+ChampionshipStrategy -->|generates| Match

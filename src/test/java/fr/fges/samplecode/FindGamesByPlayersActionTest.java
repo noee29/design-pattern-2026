@@ -27,15 +27,55 @@ class FindGamesByPlayersActionTest {
         public void save(List<BoardGame> games) {}
     }
 
-    static class FakeInput extends UserInput {
+    static class FakeInputFor4Players extends UserInput {
         @Override
         public int getIntAtLeast(String label, int min) {
             return 4;
         }
     }
 
+    static class FakeInputFor99Players extends UserInput {
+        @Override
+        public int getIntAtLeast(String label, int min) {
+            return 99;
+        }
+    }
+
     @Test
-    void findGamesByPlayers_shouldFilterAndSortCorrectly() {
+    void getLabel_shouldReturnCorrectLabel() {
+        // Arrange
+        GameService service = new GameService(new FakeStorage());
+        FindGamesByPlayersAction action = new FindGamesByPlayersAction(service, new FakeInputFor4Players());
+
+        // Act
+        String label = action.getLabel();
+
+        // Assert
+        assertEquals("Games for X Players", label);
+    }
+
+    @Test
+    void execute_shouldNotThrow_whenGamesAreFound() {
+        // Arrange
+        GameService service = new GameService(new FakeStorage());
+        FindGamesByPlayersAction action = new FindGamesByPlayersAction(service, new FakeInputFor4Players());
+
+        // Act & Assert
+        assertDoesNotThrow(action::execute);
+    }
+
+    @Test
+    void execute_shouldNotThrow_whenNoGamesFound() {
+        // Arrange
+        GameService service = new GameService(new FakeStorage());
+        FindGamesByPlayersAction action = new FindGamesByPlayersAction(service, new FakeInputFor99Players());
+
+        // Act & Assert
+        assertDoesNotThrow(action::execute);
+    }
+
+    @Test
+    void service_shouldFilterAndSortCorrectly_forFourPlayers() {
         // Arrange
         GameService service = new GameService(new FakeStorage());
 
@@ -47,15 +87,5 @@ class FindGamesByPlayersActionTest {
         assertEquals("7 Wonders", result.get(0).getTitle());
         assertEquals("Catan", result.get(1).getTitle());
         assertEquals("Pandemic", result.get(2).getTitle());
-    }
-
-    @Test
-    void action_execute_shouldNotThrow() {
-        // Arrange
-        GameService service = new GameService(new FakeStorage());
-        FindGamesByPlayersAction action = new FindGamesByPlayersAction(service, new FakeInput());
-
-        // Act & Assert
-        assertDoesNotThrow(action::execute);
     }
 }
