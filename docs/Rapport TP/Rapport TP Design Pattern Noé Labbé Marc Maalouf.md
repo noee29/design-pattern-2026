@@ -64,3 +64,20 @@ La fonctionnalité 1 (Undo Last Action) a été implémentée à l'aide du comma
 
 
 Nous avons ajouté la fonctionnalité 2 « Games for X players » en créant une nouvelle classe FindGamesByPlayersAction (Command Pattern) et une nouvelle méthode de filtrage dans GameService qui renvoie les jeux correspondant à un nombre de joueurs et les trie par ordre alphabétique.
+
+
+-------------------------------------------------------------------------------------------------------------------------------------
+
+**Rapport TP 4 Marc MAALOUF Noé LABBÉ 22/02/26**
+
+
+
+La fonctionnalité Configuration du tournoi a été développée en utilisant le pattern Builder pour faciliter la création d’objets Tournoi qui sont assez complexes. L’objectif était surtout d’éviter les configurations incohérentes et de garantir que seuls des tournois valides puissent être instanciés.
+
+
+
+On a également refactorisé certaines classes déjà existantes pour rendre le code plus clair et améliorer la lisibilité. Ça nous a permis de simplifier la business logic et de mieux structurer le projet.
+
+
+
+Enfin, le système de menu a été rendu dynamique, ce qui le rend plus flexible et plus simple à faire évoluer par la suite.
