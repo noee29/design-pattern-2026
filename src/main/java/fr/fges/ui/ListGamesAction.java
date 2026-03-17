@@ -1,9 +1,8 @@
-package fr.fges.action;
+package fr.fges.ui;
 
 import fr.fges.service.GameRepository;
-import fr.fges.ui.GamePrinter;
 
-public class ListGamesAction implements MenuAction {
+public class ListGamesAction implements MenuEntry {
 
     private final GameRepository repository;
     private final GamePrinter printer;

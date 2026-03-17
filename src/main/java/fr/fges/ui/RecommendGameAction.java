@@ -1,14 +1,13 @@
-package fr.fges.action;
+package fr.fges.ui;
 
 import fr.fges.businesslogic.RecommendationService;
 import fr.fges.model.BoardGame;
 import fr.fges.service.GameRepository;
-import fr.fges.ui.UserInput;
 
 import java.util.List;
 import java.util.Optional;
 
-public class RecommendGameAction implements MenuAction {
+public class RecommendGameAction implements MenuEntry {
 
     private final GameRepository repository;
     private final UserInput input;
@@ -43,10 +42,6 @@ public class RecommendGameAction implements MenuAction {
             return;
         }
 
-        BoardGame game = recommended.get();
-        System.out.println("Recommended game: \"" + game.getTitle() +
-                "\" (" + game.getMinPlayers() + "-" +
-                game.getMaxPlayers() + " players, " +
-                game.getCategory() + ")");
+        System.out.println("Recommended game: " + recommended.get());
     }
 }

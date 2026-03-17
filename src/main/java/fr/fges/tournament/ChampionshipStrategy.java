@@ -34,7 +34,7 @@ public class ChampionshipStrategy implements TournamentStrategy {
         return matches;
     }
 
-    private Player playMatch(Match match, int matchNumber, int total, UserInput input) {
+    private void playMatch(Match match, int matchNumber, int total, UserInput input) {
         System.out.println("\n=== Match " + matchNumber + "/" + total + " ===");
         System.out.println(match.getPlayer1().getName() + " vs " + match.getPlayer2().getName());
 
@@ -48,7 +48,5 @@ public class ChampionshipStrategy implements TournamentStrategy {
 
         winner.addWin();
         loser.addLoss();
-
-        return winner;
     }
 }

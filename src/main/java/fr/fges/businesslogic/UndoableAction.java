@@ -1,7 +1,7 @@
 package fr.fges.businesslogic;
 
-import fr.fges.action.MenuAction;
+import fr.fges.ui.MenuEntry;
 
-public interface UndoableAction<T> extends MenuAction {
+public interface UndoableAction<T> extends MenuEntry {
     void undo();
 }

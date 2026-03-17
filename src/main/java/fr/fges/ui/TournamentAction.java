@@ -1,24 +1,29 @@
-package fr.fges.action;
+package fr.fges.ui;
 
+import fr.fges.businesslogic.TournamentService;
 import fr.fges.model.BoardGame;
 import fr.fges.service.GameRepository;
-import fr.fges.tournament.*;
-import fr.fges.ui.UserInput;
+import fr.fges.tournament.ChampionshipStrategy;
+import fr.fges.tournament.KingOfHillStrategy;
+import fr.fges.tournament.Player;
+import fr.fges.tournament.TournamentStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TournamentAction implements MenuAction {
+public class TournamentAction implements MenuEntry {
 
     private static final int MIN_PLAYERS = 3;
     private static final int MAX_PLAYERS = 8;
 
     private final GameRepository repository;
     private final UserInput input;
+    private final TournamentService tournamentService;
 
-    public TournamentAction(GameRepository repository, UserInput input) {
+    public TournamentAction(GameRepository repository, UserInput input, TournamentService tournamentService) {
         this.repository = repository;
         this.input = input;
+        this.tournamentService = tournamentService;
     }
 
     @Override
@@ -31,15 +36,16 @@ public class TournamentAction implements MenuAction {
         System.out.println("\n=== Tournament Mode ===");
 
         BoardGame game = selectGame();
-        if (game == null) return;
+        if (game == null) {
+            return;
+        }
+
+        System.out.println("Selected game: " + game.getTitle());
 
         List<Player> players = collectPlayers();
-        if (players == null) return;
-
         TournamentStrategy strategy = selectStrategy();
 
-        Tournament tournament = new Tournament(players, strategy, input);
-        tournament.play();
+        tournamentService.startTournament(players, strategy, input);
     }
 
     private BoardGame selectGame() {
@@ -61,11 +67,13 @@ public class TournamentAction implements MenuAction {
 
     private List<BoardGame> getTwoPlayerGames() {
         List<BoardGame> result = new ArrayList<>();
+
         for (BoardGame game : repository.findAll()) {
             if (game.getMinPlayers() <= 2 && game.getMaxPlayers() >= 2) {
                 result.add(game);
             }
         }
+
         return result;
     }
 
@@ -77,13 +85,14 @@ public class TournamentAction implements MenuAction {
             String name = input.getString("Enter player " + i + " name: ");
             players.add(new Player(name));
         }
+
         return players;
     }
 
     private TournamentStrategy selectStrategy() {
         System.out.println("\nChoose format:");
-        System.out.println("1. Championship (everyone plays everyone)");
-        System.out.println("2. King of the Hill (winner stays)");
+        System.out.println("1. Championship");
+        System.out.println("2. King of the Hill");
 
         int choice = input.getIntBetween("Select format", 1, 2);
         return (choice == 1) ? new ChampionshipStrategy() : new KingOfHillStrategy();

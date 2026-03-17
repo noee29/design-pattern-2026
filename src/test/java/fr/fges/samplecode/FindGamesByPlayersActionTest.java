@@ -1,6 +1,6 @@
 package fr.fges.samplecode;
 
-import fr.fges.action.FindGamesByPlayersAction;
+import fr.fges.ui.FindGamesByPlayersAction;
 import fr.fges.model.BoardGame;
 import fr.fges.storage.StorageStrategy;
 import fr.fges.ui.UserInput;

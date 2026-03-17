@@ -1,13 +1,12 @@
-package fr.fges.action;
+package fr.fges.ui;
 
 import fr.fges.businesslogic.ActionHistory;
 import fr.fges.businesslogic.UndoableAction;
 import fr.fges.model.BoardGame;
 import fr.fges.service.GameAdder;
 import fr.fges.service.GameRemover;
-import fr.fges.ui.UserInput;
 
-public class AddGameAction implements UndoableAction<BoardGame> {
+public class AddGameAction implements UndoableAction<BoardGame>, MenuEntry {
 
     private final GameAdder adder;
     private final GameRemover remover;

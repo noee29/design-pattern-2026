@@ -1,6 +1,6 @@
 package fr.fges.samplecode;
 
-import fr.fges.action.AddGameAction;
+import fr.fges.ui.AddGameAction;
 import fr.fges.businesslogic.ActionHistory;
 import fr.fges.businesslogic.UndoLastAction;
 import fr.fges.model.BoardGame;

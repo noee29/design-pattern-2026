@@ -1,6 +1,6 @@
 package fr.fges.samplecode;
 
-import fr.fges.action.ExitAction;
+import fr.fges.ui.ExitAction;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

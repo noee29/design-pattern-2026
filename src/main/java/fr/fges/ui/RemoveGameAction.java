@@ -1,4 +1,4 @@
-package fr.fges.action;
+package fr.fges.ui;
 
 import fr.fges.businesslogic.ActionHistory;
 import fr.fges.businesslogic.UndoableAction;
@@ -6,11 +6,10 @@ import fr.fges.model.BoardGame;
 import fr.fges.service.GameAdder;
 import fr.fges.service.GameRemover;
 import fr.fges.service.GameRepository;
-import fr.fges.ui.UserInput;
 
 import java.util.List;
 
-public class RemoveGameAction implements UndoableAction<BoardGame> {
+public class RemoveGameAction implements UndoableAction<BoardGame>, MenuEntry {
 
     private final GameRepository repository;
     private final GameRemover remover;

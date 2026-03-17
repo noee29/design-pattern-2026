@@ -1,10 +1,8 @@
 package fr.fges.businesslogic;
 
-import fr.fges.action.MenuAction;
-import fr.fges.model.BoardGame;
+import fr.fges.ui.MenuEntry;
 
-
-public class UndoLastAction implements MenuAction {
+public class UndoLastAction implements MenuEntry {
 
     private final ActionHistory history;
 
@@ -13,16 +11,17 @@ public class UndoLastAction implements MenuAction {
     }
 
     @Override
-    public String getLabel() { return "Undo Last Action"; }
+    public String getLabel() {
+        return "Undo Last Action";
+    }
 
     @Override
     public void execute() {
         if (history.isEmpty()) {
-            System.out.println("Nothing to undo.");
+            System.out.println("No action to undo.");
             return;
         }
 
-        UndoableAction<BoardGame> last = history.pop();
-        last.undo();
+        history.pop().undo();
     }
 }

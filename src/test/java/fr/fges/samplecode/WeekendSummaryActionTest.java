@@ -1,7 +1,7 @@
 package fr.fges.samplecode;
 
 import fr.fges.model.BoardGame;
-import fr.fges.policy.WeekendSummaryAction;
+import fr.fges.ui.WeekendSummaryAction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

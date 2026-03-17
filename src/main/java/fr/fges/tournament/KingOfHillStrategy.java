@@ -47,8 +47,8 @@ public class KingOfHillStrategy implements TournamentStrategy {
             loser.addLoss();
 
             king = winner;
-
             System.out.println("New king: " + king.getName());
+
             matchNumber++;
         }
 

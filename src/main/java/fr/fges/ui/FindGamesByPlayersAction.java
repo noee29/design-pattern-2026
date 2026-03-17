@@ -1,12 +1,11 @@
-package fr.fges.action;
+package fr.fges.ui;
 
 import fr.fges.model.BoardGame;
 import fr.fges.service.GameFinder;
-import fr.fges.ui.UserInput;
 
 import java.util.List;
 
-public class FindGamesByPlayersAction implements MenuAction {
+public class FindGamesByPlayersAction implements MenuEntry {
 
     private final GameFinder finder;
     private final UserInput input;

@@ -38,4 +38,9 @@
   "minPlayers" : 2,
   "maxPlayers" : 3,
   "category" : "world wide web"
+}, {
+  "title" : "belgium waffle",
+  "minPlayers" : 1,
+  "maxPlayers" : 9,
+  "category" : "food"
 } ]

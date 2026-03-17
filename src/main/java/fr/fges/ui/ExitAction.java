@@ -1,9 +1,11 @@
-package fr.fges.action;
+package fr.fges.ui;
 
-public class ExitAction implements MenuAction {
+public class ExitAction implements MenuEntry {
 
     @Override
-    public String getLabel() { return "Exit"; }
+    public String getLabel() {
+        return "Exit";
+    }
 
     @Override
     public void execute() {
