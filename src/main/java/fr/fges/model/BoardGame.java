@@ -7,7 +7,8 @@ public class BoardGame {
     private int maxPlayers;
     private String category;
 
-    // Constructeur vide obligatoire pour Jackson
+    private static final String FORMAT = "%s (%d-%d players, %s)";
+
     public BoardGame() {
     }
 
@@ -25,7 +26,7 @@ public class BoardGame {
 
     @Override
     public String toString() {
-        return title + " (" + minPlayers + "-" + maxPlayers + " players, " + category + ")";
+        return String.format(FORMAT, title, minPlayers, maxPlayers, category);
     }
 
     @Override
