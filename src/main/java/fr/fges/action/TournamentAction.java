@@ -1,7 +1,7 @@
 package fr.fges.action;
 
 import fr.fges.model.BoardGame;
-import fr.fges.service.GameService;
+import fr.fges.service.GameRepository;
 import fr.fges.tournament.*;
 import fr.fges.ui.UserInput;
 
@@ -13,16 +13,18 @@ public class TournamentAction implements MenuAction {
     private static final int MIN_PLAYERS = 3;
     private static final int MAX_PLAYERS = 8;
 
-    private final GameService service;
+    private final GameRepository repository;
     private final UserInput input;
 
-    public TournamentAction(GameService service, UserInput input) {
-        this.service = service;
+    public TournamentAction(GameRepository repository, UserInput input) {
+        this.repository = repository;
         this.input = input;
     }
 
     @Override
-    public String getLabel() { return "Tournament Mode"; }
+    public String getLabel() {
+        return "Tournament Mode";
+    }
 
     @Override
     public void execute() {
@@ -59,7 +61,7 @@ public class TournamentAction implements MenuAction {
 
     private List<BoardGame> getTwoPlayerGames() {
         List<BoardGame> result = new ArrayList<>();
-        for (BoardGame game : service.getAllGames()) {
+        for (BoardGame game : repository.findAll()) {
             if (game.getMinPlayers() <= 2 && game.getMaxPlayers() >= 2) {
                 result.add(game);
             }

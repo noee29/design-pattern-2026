@@ -2,7 +2,7 @@ package fr.fges.action;
 
 import fr.fges.businesslogic.RecommendationService;
 import fr.fges.model.BoardGame;
-import fr.fges.service.GameService;
+import fr.fges.service.GameRepository;
 import fr.fges.ui.UserInput;
 
 import java.util.List;
@@ -10,22 +10,24 @@ import java.util.Optional;
 
 public class RecommendGameAction implements MenuAction {
 
-    private final GameService service;
+    private final GameRepository repository;
     private final UserInput input;
     private final RecommendationService recommendationService;
 
-    public RecommendGameAction(GameService service, UserInput input) {
-        this.service = service;
+    public RecommendGameAction(GameRepository repository, UserInput input) {
+        this.repository = repository;
         this.input = input;
         this.recommendationService = new RecommendationService();
     }
 
     @Override
-    public String getLabel() { return "Recommend Game"; }
+    public String getLabel() {
+        return "Recommend Game";
+    }
 
     @Override
     public void execute() {
-        List<BoardGame> allGames = service.getAllGames();
+        List<BoardGame> allGames = repository.findAll();
 
         if (allGames.isEmpty()) {
             System.out.println("No games in collection.");

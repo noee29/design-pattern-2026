@@ -2,7 +2,7 @@ package fr.fges.policy;
 
 import fr.fges.action.MenuAction;
 import fr.fges.model.BoardGame;
-import fr.fges.service.GameService;
+import fr.fges.service.GameRepository;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,18 +10,20 @@ import java.util.List;
 
 public class WeekendSummaryAction implements MenuAction {
 
-    private final GameService service;
+    private final GameRepository repository;
 
-    public WeekendSummaryAction(GameService service) {
-        this.service = service;
+    public WeekendSummaryAction(GameRepository repository) {
+        this.repository = repository;
     }
 
     @Override
-    public String getLabel() { return "View Summary (Weekend Special!)"; }
+    public String getLabel() {
+        return "View Summary (Weekend Special!)";
+    }
 
     @Override
     public void execute() {
-        List<BoardGame> allGames = service.getAllGames();
+        List<BoardGame> allGames = repository.findAll();
 
         if (allGames.isEmpty()) {
             System.out.println("No games in collection.");

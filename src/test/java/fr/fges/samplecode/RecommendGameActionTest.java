@@ -2,7 +2,6 @@ package fr.fges.samplecode;
 
 import fr.fges.action.RecommendGameAction;
 import fr.fges.model.BoardGame;
-import fr.fges.service.GameService;
 import fr.fges.ui.UserInput;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

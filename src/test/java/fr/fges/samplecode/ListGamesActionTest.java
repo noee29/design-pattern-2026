@@ -2,7 +2,6 @@ package fr.fges.samplecode;
 
 import fr.fges.action.ListGamesAction;
 import fr.fges.model.BoardGame;
-import fr.fges.service.GameService;
 import fr.fges.ui.GamePrinter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -2,7 +2,6 @@ package fr.fges.samplecode;
 
 import fr.fges.action.FindGamesByPlayersAction;
 import fr.fges.model.BoardGame;
-import fr.fges.service.GameService;
 import fr.fges.storage.StorageStrategy;
 import fr.fges.ui.UserInput;
 import org.junit.jupiter.api.Test;

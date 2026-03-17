@@ -1,23 +1,25 @@
 package fr.fges.action;
 
-import fr.fges.service.GameService;
+import fr.fges.service.GameRepository;
 import fr.fges.ui.GamePrinter;
 
 public class ListGamesAction implements MenuAction {
 
-    private final GameService service;
+    private final GameRepository repository;
     private final GamePrinter printer;
 
-    public ListGamesAction(GameService service, GamePrinter printer) {
-        this.service = service;
+    public ListGamesAction(GameRepository repository, GamePrinter printer) {
+        this.repository = repository;
         this.printer = printer;
     }
 
     @Override
-    public String getLabel() { return "List All Board Games"; }
+    public String getLabel() {
+        return "List All Board Games";
+    }
 
     @Override
     public void execute() {
-        printer.printGames(service.getAllGames());
+        printer.printGames(repository.findAll());
     }
 }

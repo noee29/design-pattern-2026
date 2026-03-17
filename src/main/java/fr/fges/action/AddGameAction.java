@@ -3,24 +3,29 @@ package fr.fges.action;
 import fr.fges.businesslogic.ActionHistory;
 import fr.fges.businesslogic.UndoableAction;
 import fr.fges.model.BoardGame;
-import fr.fges.service.GameService;
+import fr.fges.service.GameAdder;
+import fr.fges.service.GameRemover;
 import fr.fges.ui.UserInput;
 
 public class AddGameAction implements UndoableAction<BoardGame> {
 
-    private final GameService service;
+    private final GameAdder adder;
+    private final GameRemover remover;
     private final UserInput input;
     private final ActionHistory history;
     private BoardGame lastAdded;
 
-    public AddGameAction(GameService service, UserInput input, ActionHistory history) {
-        this.service = service;
+    public AddGameAction(GameAdder adder, GameRemover remover, UserInput input, ActionHistory history) {
+        this.adder = adder;
+        this.remover = remover;
         this.input = input;
         this.history = history;
     }
 
     @Override
-    public String getLabel() { return "Add Board Game"; }
+    public String getLabel() {
+        return "Add Board Game";
+    }
 
     @Override
     public void execute() {
@@ -38,7 +43,7 @@ public class AddGameAction implements UndoableAction<BoardGame> {
         String category = input.getString("Category (e.g., fantasy, strategy): ");
 
         lastAdded = new BoardGame(title, minPlayers, maxPlayers, category);
-        service.addGame(lastAdded);
+        adder.addGame(lastAdded);
         history.push(this);
 
         System.out.println("Board game added successfully.");
@@ -47,7 +52,7 @@ public class AddGameAction implements UndoableAction<BoardGame> {
     @Override
     public void undo() {
         if (lastAdded != null) {
-            service.removeGame(lastAdded);
+            remover.removeGame(lastAdded);
             System.out.println("Undone: Removed \"" + lastAdded.getTitle() + "\" from collection");
         }
     }

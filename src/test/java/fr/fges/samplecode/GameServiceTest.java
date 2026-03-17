@@ -1,7 +1,6 @@
 package fr.fges.samplecode;
 
 import fr.fges.model.BoardGame;
-import fr.fges.service.GameService;
 import fr.fges.storage.StorageStrategy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
