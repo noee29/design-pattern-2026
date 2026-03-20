@@ -15,43 +15,59 @@ class PlayerTest {
         player = new Player("Alice");
     }
 
+    // ── Constructeur
+
     @Test
-    void constructor_shouldInitializeWithZeroPointsAndWins() {
-        // Arrange & Act — player create in setUp()
+    void constructor_shouldSetName() {
+        // Arrange & Act — player créé dans setUp()
 
         // Assert
         assertEquals("Alice", player.getName());
-        assertEquals(0, player.getPoints());
-        assertEquals(0, player.getWins());
     }
 
     @Test
-    void addWin_shouldAdd3PointsAndIncrementWins() {
-        // Arrange — player with 0 points
+    void constructor_shouldInitializePointsAtZero() {
+        // Arrange & Act — player créé dans setUp()
+
+        // Assert
+        assertEquals(0, player.getPoints());
+    }
+
+    @Test
+    void constructor_shouldInitializeWinsAtZero() {
+        // Arrange & Act — player créé dans setUp()
+
+        // Assert
+        assertEquals(0, player.getWins());
+    }
+
+    // ── addWin
+
+    @Test
+    void addWin_shouldAdd3Points() {
+        // Arrange — player à 0 points
 
         // Act
         player.addWin();
 
         // Assert
         assertEquals(3, player.getPoints());
+    }
+
+    @Test
+    void addWin_shouldIncrementWinsByOne() {
+        // Arrange — player à 0 victoires
+
+        // Act
+        player.addWin();
+
+        // Assert
         assertEquals(1, player.getWins());
     }
 
     @Test
-    void addLoss_shouldAdd1Point() {
-        // Arrange — player with 0 points
-
-        // Act
-        player.addLoss();
-
-        // Assert
-        assertEquals(1, player.getPoints());
-        assertEquals(0, player.getWins()); // pas de victoire ajoutée
-    }
-
-    @Test
-    void addWin_calledTwice_shouldAccumulateCorrectly() {
-        // Arrange — player with 0 points
+    void addWin_calledTwice_shouldGive6PointsAnd2Wins() {
+        // Arrange — player à 0 points
 
         // Act
         player.addWin();
@@ -62,8 +78,45 @@ class PlayerTest {
         assertEquals(2, player.getWins());
     }
 
+    // ── addLoss
+
     @Test
-    void toString_shouldContainNameAndPoints() {
+    void addLoss_shouldAdd1Point() {
+        // Arrange — player à 0 points
+
+        // Act
+        player.addLoss();
+
+        // Assert
+        assertEquals(1, player.getPoints());
+    }
+
+    @Test
+    void addLoss_shouldNotIncrementWins() {
+        // Arrange — player à 0 victoires
+
+        // Act
+        player.addLoss();
+
+        // Assert
+        assertEquals(0, player.getWins());
+    }
+
+    // ── toString
+
+    @Test
+    void toString_shouldContainName() {
+        // Arrange — player "Alice"
+
+        // Act
+        String result = player.toString();
+
+        // Assert
+        assertTrue(result.contains("Alice"));
+    }
+
+    @Test
+    void toString_shouldContainPoints_afterWin() {
         // Arrange
         player.addWin();
 
@@ -71,12 +124,11 @@ class PlayerTest {
         String result = player.toString();
 
         // Assert
-        assertTrue(result.contains("Alice"));
         assertTrue(result.contains("3"));
     }
 
     @Test
-    void toString_shouldUseSingularWin_whenOneWin() {
+    void toString_shouldUseSingular_whenOneWin() {
         // Arrange
         player.addWin();
 
@@ -88,7 +140,7 @@ class PlayerTest {
     }
 
     @Test
-    void toString_shouldUsePluralWins_whenMultipleWins() {
+    void toString_shouldUsePlural_whenMultipleWins() {
         // Arrange
         player.addWin();
         player.addWin();

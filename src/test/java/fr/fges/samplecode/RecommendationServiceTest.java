@@ -19,8 +19,78 @@ class RecommendationServiceTest {
         service = new RecommendationService();
     }
 
+    // ── recommend
+
     @Test
-    void recommend_shouldReturnCompatibleGame() {
+    void recommend_shouldReturnEmpty_whenListIsEmpty() {
+        // Arrange
+        List<BoardGame> games = List.of();
+
+        // Act
+        Optional<BoardGame> result = service.recommend(games, 3);
+
+        // Assert
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void recommend_shouldReturnEmpty_whenNoGameCompatible() {
+        // Arrange
+        List<BoardGame> games = List.of(
+                new BoardGame("SoloGame", 1, 1, "solo")
+        );
+
+        // Act
+        Optional<BoardGame> result = service.recommend(games, 4);
+
+        // Assert
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void recommend_shouldReturnPresent_whenCompatibleGameExists() {
+        // Arrange
+        List<BoardGame> games = List.of(
+                new BoardGame("Catan", 3, 4, "strategy")
+        );
+
+        // Act
+        Optional<BoardGame> result = service.recommend(games, 4);
+
+        // Assert
+        assertTrue(result.isPresent());
+    }
+
+    @Test
+    void recommend_shouldReturnCompatibleGame_respecting_minPlayers() {
+        // Arrange
+        List<BoardGame> games = List.of(
+                new BoardGame("Catan", 3, 4, "strategy")
+        );
+
+        // Act
+        Optional<BoardGame> result = service.recommend(games, 2); // sous le min
+
+        // Assert
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void recommend_shouldReturnCompatibleGame_respecting_maxPlayers() {
+        // Arrange
+        List<BoardGame> games = List.of(
+                new BoardGame("Catan", 3, 4, "strategy")
+        );
+
+        // Act
+        Optional<BoardGame> result = service.recommend(games, 5); // au-dessus du max
+
+        // Assert
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void recommend_shouldReturnGameWithinRange() {
         // Arrange
         List<BoardGame> games = List.of(
                 new BoardGame("Catan", 3, 4, "strategy"),
@@ -37,42 +107,18 @@ class RecommendationServiceTest {
     }
 
     @Test
-    void recommend_shouldReturnEmpty_whenNoCompatibleGame() {
+    void recommend_shouldReturnTheOnlyCompatibleGame_whenOnlyOneMatches() {
         // Arrange
         List<BoardGame> games = List.of(
+                new BoardGame("Catan", 3, 4, "strategy"),
                 new BoardGame("SoloGame", 1, 1, "solo")
         );
 
         // Act
-        Optional<BoardGame> result = service.recommend(games, 4);
-
-        // Assert
-        assertTrue(result.isEmpty());
-    }
-
-    @Test
-    void recommend_shouldReturnEmpty_whenListIsEmpty() {
-        // Arrange
-        List<BoardGame> games = List.of();
-
-        // Act
         Optional<BoardGame> result = service.recommend(games, 3);
 
         // Assert
-        assertTrue(result.isEmpty());
-    }
-
-    @Test
-    void recommend_shouldOnlyConsiderGamesWithExactPlayerCount() {
-        // Arrange
-        List<BoardGame> games = List.of(
-                new BoardGame("OnlyFor2", 2, 2, "strategy")
-        );
-
-        // Act
-        Optional<BoardGame> result = service.recommend(games, 3);
-
-        // Assert
-        assertTrue(result.isEmpty());
+        assertTrue(result.isPresent());
+        assertEquals("Catan", result.get().getTitle());
     }
 }

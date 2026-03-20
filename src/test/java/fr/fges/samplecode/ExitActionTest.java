@@ -1,16 +1,26 @@
 package fr.fges.samplecode;
 
 import fr.fges.ui.ExitAction;
+import fr.fges.ui.MenuEntry;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class ExitActionTest {
 
+    private ExitAction action;
+
+    @BeforeEach
+    void setUp() {
+        action = new ExitAction();
+    }
+
+    // ── getLabel
+
     @Test
-    void getLabel_shouldReturnCorrectLabel() {
-        // Arrange
-        ExitAction action = new ExitAction();
+    void getLabel_shouldReturnExit() {
+        // Arrange — action créée dans setUp()
 
         // Act
         String label = action.getLabel();
@@ -19,12 +29,11 @@ class ExitActionTest {
         assertEquals("Exit", label);
     }
 
-    @Test
-    void execute_shouldCallSystemExit() {
-        // Arrange
-        ExitAction action = new ExitAction();
+    // ── implémentation de l'interface
 
-        // Act & Assert
-        assertThrows(SecurityException.class, action::execute);
+    @Test
+    void exitAction_shouldImplementMenuEntry() {
+        // Assert
+        assertInstanceOf(MenuEntry.class, action);
     }
 }

@@ -1,8 +1,10 @@
 package fr.fges.samplecode;
 
-import fr.fges.ui.AddGameAction;
 import fr.fges.businesslogic.ActionHistory;
 import fr.fges.model.BoardGame;
+import fr.fges.service.GameAdder;
+import fr.fges.service.GameRemover;
+import fr.fges.ui.AddGameAction;
 import fr.fges.ui.UserInput;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,21 +14,27 @@ import static org.mockito.Mockito.*;
 
 class AddGameActionTest {
 
-    private GameService service;
+    private GameAdder adder;
+    private GameRemover remover;
     private UserInput input;
     private ActionHistory history;
     private AddGameAction action;
 
     @BeforeEach
     void setUp() {
-        service = mock(GameService.class);
+        adder = mock(GameAdder.class);
+        remover = mock(GameRemover.class);
         input = mock(UserInput.class);
         history = new ActionHistory();
-        action = new AddGameAction(service, input, history);
+        action = new AddGameAction(adder, remover, input, history);
     }
+
+    // ── getLabel
 
     @Test
     void getLabel_shouldReturnCorrectLabel() {
+        // Arrange — action créée dans setUp()
+
         // Act
         String label = action.getLabel();
 
@@ -34,8 +42,10 @@ class AddGameActionTest {
         assertEquals("Add Board Game", label);
     }
 
+    // ── execute
+
     @Test
-    void execute_shouldCallAddGameOnService() {
+    void execute_shouldCallAddGame_onAdder() {
         // Arrange
         when(input.getString("Title: ")).thenReturn("Catan");
         when(input.getInt("Minimum Players: ")).thenReturn(3);
@@ -46,7 +56,22 @@ class AddGameActionTest {
         action.execute();
 
         // Assert
-        verify(service, times(1)).addGame(any(BoardGame.class));
+        verify(adder, times(1)).addGame(any(BoardGame.class));
+    }
+
+    @Test
+    void execute_shouldAddGameWithCorrectTitle() {
+        // Arrange
+        when(input.getString("Title: ")).thenReturn("Catan");
+        when(input.getInt("Minimum Players: ")).thenReturn(3);
+        when(input.getInt("Maximum Players: ")).thenReturn(4);
+        when(input.getString("Category (e.g., fantasy, strategy): ")).thenReturn("strategy");
+
+        // Act
+        action.execute();
+
+        // Assert
+        verify(adder).addGame(argThat(g -> g.getTitle().equals("Catan")));
     }
 
     @Test
@@ -65,7 +90,24 @@ class AddGameActionTest {
     }
 
     @Test
-    void undo_shouldCallRemoveGameOnService() {
+    void execute_shouldPushItselfToHistory() {
+        // Arrange
+        when(input.getString("Title: ")).thenReturn("Catan");
+        when(input.getInt("Minimum Players: ")).thenReturn(3);
+        when(input.getInt("Maximum Players: ")).thenReturn(4);
+        when(input.getString("Category (e.g., fantasy, strategy): ")).thenReturn("strategy");
+
+        // Act
+        action.execute();
+
+        // Assert
+        assertSame(action, history.pop());
+    }
+
+    // ── undo
+
+    @Test
+    void undo_shouldCallRemoveGame_onRemover_afterExecute() {
         // Arrange
         when(input.getString("Title: ")).thenReturn("Catan");
         when(input.getInt("Minimum Players: ")).thenReturn(3);
@@ -77,7 +119,7 @@ class AddGameActionTest {
         action.undo();
 
         // Assert
-        verify(service, times(1)).removeGame(any(BoardGame.class));
+        verify(remover, times(1)).removeGame(any(BoardGame.class));
     }
 
     @Test
@@ -93,6 +135,17 @@ class AddGameActionTest {
         action.undo();
 
         // Assert
-        verify(service).removeGame(argThat(g -> g.getTitle().equals("Catan")));
+        verify(remover).removeGame(argThat(g -> g.getTitle().equals("Catan")));
+    }
+
+    @Test
+    void undo_shouldNotCallRemover_ifExecuteWasNeverCalled() {
+        // Arrange — execute() jamais appelé, lastAdded est null
+
+        // Act
+        action.undo();
+
+        // Assert
+        verify(remover, never()).removeGame(any());
     }
 }
