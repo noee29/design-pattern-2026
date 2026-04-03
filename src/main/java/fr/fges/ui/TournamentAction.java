@@ -11,6 +11,7 @@ import fr.fges.tournament.TournamentStrategy;
 import java.util.ArrayList;
 import java.util.List;
 
+/** Action pour lancer un tournoi : sélectionne jeu, joueurs et stratégie, puis lance le tournoi. */
 public class TournamentAction implements MenuEntry {
 
     private static final int MIN_PLAYERS = 3;

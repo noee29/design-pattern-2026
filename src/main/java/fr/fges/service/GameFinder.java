@@ -4,6 +4,7 @@ import fr.fges.model.BoardGame;
 
 import java.util.List;
 
+/** Service de recherche et filtrage : trouve les jeux compatibles avec un nombre de joueurs donné. */
 public class GameFinder {
 
     private final GameRepository repository;

@@ -1,9 +1,4 @@
 [ {
-  "title" : "Catan",
-  "minPlayers" : 2,
-  "maxPlayers" : 6,
-  "category" : "strategy"
-}, {
   "title" : "Monopoly",
   "minPlayers" : 2,
   "maxPlayers" : 8,
@@ -39,8 +34,8 @@
   "maxPlayers" : 3,
   "category" : "world wide web"
 }, {
-  "title" : "belgium waffle",
-  "minPlayers" : 1,
-  "maxPlayers" : 9,
-  "category" : "food"
+  "title" : "Catan",
+  "minPlayers" : 2,
+  "maxPlayers" : 6,
+  "category" : "strategy"
 } ]

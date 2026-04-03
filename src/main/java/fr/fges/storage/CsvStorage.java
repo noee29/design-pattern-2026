@@ -6,6 +6,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/** Implémentation de StorageStrategy pour CSV. */
 public class CsvStorage implements StorageStrategy {
 
     private final String file;

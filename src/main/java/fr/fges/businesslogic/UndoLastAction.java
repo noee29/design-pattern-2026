@@ -2,6 +2,7 @@ package fr.fges.businesslogic;
 
 import fr.fges.ui.MenuEntry;
 
+/** Action de menu pour annuler la dernière opération en appelant undo() sur l'action stockée. */
 public class UndoLastAction implements MenuEntry {
 
     private final ActionHistory history;

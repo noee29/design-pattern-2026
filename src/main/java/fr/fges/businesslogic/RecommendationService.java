@@ -7,7 +7,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-
+/** Service de recommandation : filtre les jeux compatibles avec le nombre de joueurs et en retourne un jeu aléatoire. */
 public class RecommendationService {
 
     private final Random random = new Random();

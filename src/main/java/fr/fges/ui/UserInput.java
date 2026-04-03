@@ -2,6 +2,7 @@ package fr.fges.ui;
 
 import java.util.Scanner;
 
+/** Gestionnaire centralisé d'input utilisateur : fournit des méthodes pour récupérer et valider les entrées. */
 public class UserInput {
 
     private final Scanner scanner = new Scanner(System.in);

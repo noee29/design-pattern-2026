@@ -2,6 +2,7 @@ package fr.fges.ui;
 
 import fr.fges.service.GameRepository;
 
+/** Action pour afficher tous les jeux de la collection. */
 public class ListGamesAction implements MenuEntry {
 
     private final GameRepository repository;

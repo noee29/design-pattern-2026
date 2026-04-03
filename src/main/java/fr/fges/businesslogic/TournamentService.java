@@ -7,6 +7,7 @@ import fr.fges.ui.UserInput;
 
 import java.util.List;
 
+/** Service de gestionnaire des tournois : valide les conditions et lance un tournoi avec la stratégie donnée. */
 public class TournamentService {
 
     public void startTournament(List<Player> players, TournamentStrategy strategy, UserInput input) {

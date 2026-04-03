@@ -2,6 +2,7 @@ package fr.fges.service;
 
 import fr.fges.model.BoardGame;
 
+/** Service pour retirer un jeu : retire du référentiel et sauvegarde. */
 public class GameRemover {
 
     private final GameRepository repository;

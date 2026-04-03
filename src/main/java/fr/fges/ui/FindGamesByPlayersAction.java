@@ -5,6 +5,7 @@ import fr.fges.service.GameFinder;
 
 import java.util.List;
 
+/** Action pour rechercher les jeux compatibles avec un nombre spécifique de joueurs. */
 public class FindGamesByPlayersAction implements MenuEntry {
 
     private final GameFinder finder;

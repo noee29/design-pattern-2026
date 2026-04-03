@@ -5,6 +5,7 @@ import fr.fges.ui.UserInput;
 import java.util.ArrayList;
 import java.util.List;
 
+/** Stratégie de tournoi : format Championship où chaque joueur affronte tous les autres une fois. */
 public class ChampionshipStrategy implements TournamentStrategy {
 
     @Override

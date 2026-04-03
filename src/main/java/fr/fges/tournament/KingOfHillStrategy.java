@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+/** Stratégie de tournoi : format King Of The Hill où le gagnant reste roi et affronte le challenger suivant. */
 public class KingOfHillStrategy implements TournamentStrategy {
 
     @Override

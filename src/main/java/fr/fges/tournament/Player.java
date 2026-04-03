@@ -1,5 +1,6 @@
 package fr.fges.tournament;
 
+/** Représentation d'un joueur : stocke nom, points (3 par victoire, 1 par défaite) et compteur de victoires. */
 public class Player {
 
     private final String name;

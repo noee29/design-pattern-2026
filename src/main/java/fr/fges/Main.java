@@ -29,6 +29,7 @@ import fr.fges.ui.WeekendSummaryAction;
 import java.util.ArrayList;
 import java.util.List;
 
+/** Point d'entrée de l'application : initialise tous les composants (UI, menu) et lance la boucle principale. */
 public class Main {
 
     public static void main(String[] args) {

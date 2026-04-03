@@ -3,6 +3,7 @@ package fr.fges.policy;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 
+/** Implémentation de DayPolicy : retourne true si le jour courant est samedi ou dimanche. */
 public class SystemDayPolicy implements DayPolicy {
 
     @Override

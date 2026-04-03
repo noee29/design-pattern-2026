@@ -9,6 +9,7 @@ import fr.fges.service.GameRepository;
 
 import java.util.List;
 
+/** Action pour retirer un jeu avec support undo : affiche la liste et supprime le jeu sélectionné. */
 public class RemoveGameAction implements UndoableAction<BoardGame>, MenuEntry {
 
     private final GameRepository repository;

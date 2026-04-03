@@ -1,5 +1,6 @@
 package fr.fges.model;
 
+/** Modèle de données d'une collection de jeux : encapsule titre, nombre de joueurs et catégorie. */
 public class BoardGame {
 
     private String title;

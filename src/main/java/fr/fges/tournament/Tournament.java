@@ -4,6 +4,7 @@ import fr.fges.ui.UserInput;
 
 import java.util.List;
 
+/** Gestionnaire de tournoi : délègue l'exécution à la stratégie et affiche les résultats finaux. */
 public class Tournament {
 
     private final List<Player> players;

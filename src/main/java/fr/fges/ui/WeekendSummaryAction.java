@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/** Action spéciale lors du weekend : affiche 3 jeux aléatoires de la collection. */
 public class WeekendSummaryAction implements MenuEntry {
 
     private final GameRepository repository;

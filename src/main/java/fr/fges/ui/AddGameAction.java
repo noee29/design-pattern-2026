@@ -6,6 +6,7 @@ import fr.fges.model.BoardGame;
 import fr.fges.service.GameAdder;
 import fr.fges.service.GameRemover;
 
+/** Action pour ajouter un jeu avec support undo. */
 public class AddGameAction implements UndoableAction<BoardGame>, MenuEntry {
 
     private final GameAdder adder;

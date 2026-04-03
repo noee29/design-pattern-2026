@@ -6,6 +6,7 @@ import fr.fges.storage.StorageStrategy;
 import java.io.IOException;
 import java.util.List;
 
+/** Service de chargement des jeux : délègue au StorageStrategy. */
 public class GameLoader {
 
     private final StorageStrategy storage;

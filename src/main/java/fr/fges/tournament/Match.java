@@ -1,5 +1,6 @@
 package fr.fges.tournament;
 
+/** Représentation d'un match : stocke deux joueurs pour un duel. */
 public class Match {
 
     private final Player player1;

@@ -4,6 +4,7 @@ import fr.fges.model.BoardGame;
 
 import java.util.List;
 
+/** Service d'affichage des jeux : présente les jeux de manière claire et numérotée. */
 public class GamePrinter {
 
     public void printGames(List<BoardGame> games) {

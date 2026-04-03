@@ -4,6 +4,7 @@ import fr.fges.policy.DayPolicy;
 
 import java.util.List;
 
+/** Gestionnaire de la boucle principale du menu : affiche le menu et exécute les actions sélectionnées. */
 public class Menu {
 
     private final UserInput input;

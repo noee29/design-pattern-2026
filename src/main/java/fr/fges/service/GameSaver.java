@@ -6,6 +6,7 @@ import fr.fges.storage.StorageStrategy;
 import java.io.IOException;
 import java.util.List;
 
+/** Service de sauvegarde des jeux : délègue au StorageStrategy et gère les erreurs. */
 public class GameSaver {
 
     private final StorageStrategy storage;

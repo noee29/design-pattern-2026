@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+/** Implémentation de StorageStrategy pour JSON. */
 public class JsonStorage implements StorageStrategy {
 
     private final String file;

@@ -4,6 +4,7 @@ import fr.fges.model.BoardGame;
 
 import java.util.Stack;
 
+/** Gestionnaire de l'historique des actions annulables : maintient une pile d'UndoableAction pour la fonctionnalité undo. */
 public class ActionHistory {
 
     private final Stack<UndoableAction<BoardGame>> stack = new Stack<>();

@@ -2,6 +2,7 @@ package fr.fges.service;
 
 import fr.fges.model.BoardGame;
 
+/** Service pour ajouter un jeu : ajoute au référentiel et sauvegarde. */
 public class GameAdder {
 
     private final GameRepository repository;

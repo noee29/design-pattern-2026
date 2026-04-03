@@ -5,6 +5,7 @@ import fr.fges.model.BoardGame;
 import java.util.ArrayList;
 import java.util.List;
 
+/** Référentiel en mémoire centralisant l'accès et la manipulation de la collection de jeux. */
 public class GameRepository {
 
     private final List<BoardGame> games = new ArrayList<>();

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+/** Gestionnaire des résultats de tournoi : trie les joueurs par points/victoires et affiche le classement. */
 public class TournamentResult {
 
     private final List<Player> players;

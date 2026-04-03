@@ -1,5 +1,6 @@
 package fr.fges.ui;
 
+/** Action pour quitter l'application. */
 public class ExitAction implements MenuEntry {
 
     @Override

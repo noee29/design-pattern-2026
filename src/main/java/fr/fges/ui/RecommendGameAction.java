@@ -7,6 +7,7 @@ import fr.fges.service.GameRepository;
 import java.util.List;
 import java.util.Optional;
 
+/** Action pour recommander un jeu aléatoire basé sur le nombre de joueurs. */
 public class RecommendGameAction implements MenuEntry {
 
     private final GameRepository repository;
